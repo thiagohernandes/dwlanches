@@ -7,15 +7,70 @@
   <version>1.0-SNAPSHOT</version>
   <name>dw-lanches Maven Webapp</name>
   <url>http://maven.apache.org</url>
+  
+  <!-- PROPERTIES  -->
+  <properties>
+		<jdk.version>1.8</jdk.version>
+		<junit.version>4.11</junit.version>
+		<resteasy.version>3.0.1.Final</resteasy.version>
+		<resteasy.client.version>3.0.1.Final</resteasy.client.version>
+		<servlet.version>2.5</servlet.version>
+		<cdi.version>1.2</cdi.version>
+  </properties>
+  
+  <!-- REPOSITORIES  --> 
+  <repositories>
+   <repository>
+      <id>jboss</id>
+      <url>http://repository.jboss.org/nexus/content/groups/public/</url>
+   </repository>
+  </repositories>
+  
+  <!-- DEPENDENCIES  --> 
   <dependencies>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
+		<groupId>junit</groupId>
+		<artifactId>junit</artifactId>
+		<version>${junit.version}</version>
+	</dependency>	
+	 <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-jaxrs</artifactId>
+      <version>${resteasy.version}</version>
+   </dependency>
+   <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-client</artifactId>
+      <version>${resteasy.client.version}</version>
+   </dependency>
+	<dependency>
+	    <groupId>javax.servlet</groupId>
+	    <artifactId>servlet-api</artifactId>
+	    <version>${servlet.version}</version>
+	    <scope>provided</scope>
+	</dependency>	
+	<dependency>
+	    <groupId>javax.enterprise</groupId>
+	    <artifactId>cdi-api</artifactId>
+	    <version>${cdi.version}</version>
+	    <scope>provided</scope>
+	</dependency>
   </dependencies>
+  
+  <!-- BUILD  -->
   <build>
-    <finalName>dw-lanches</finalName>
+  <finalName>dw-lanches</finalName>
+  <plugins>
+    <plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-compiler-plugin</artifactId>
+			<version>2.3.2</version>
+			<configuration>
+				<source>${jdk.version}</source>
+				<target>${jdk.version}</target>
+			</configuration>
+	</plugin>
+    </plugins>    
   </build>
+  
 </project>
