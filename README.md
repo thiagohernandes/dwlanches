@@ -2,5 +2,5 @@
 Processo Seletivo Dextra
 
 -----------------------------------------
-Programa de montagems de lanches
+Programa de montagem de lanches
 -----------------------------------------
