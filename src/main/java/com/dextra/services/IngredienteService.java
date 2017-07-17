@@ -1,13 +1,18 @@
 package com.dextra.services;
 
+import java.util.List;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import com.dextra.dao.DaoIngrediente;
+import com.dextra.model.Ingrediente;
+
 /**
- * Resource/Serviços de Ingredientes
+ * Serviços de Ingredientes
  * @author Thiago Hernandes de Souza
  * @since 17-07-2017
  * */
@@ -16,17 +21,19 @@ import javax.ws.rs.core.MediaType;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class IngredienteService {
+		
+	private DaoIngrediente dao = new DaoIngrediente();
 	
 	/**
-	 * Retornar todos os clientes
+	 * Retornar todos os ingredientes
 	 * @author Thiago Hernandes de Souza
-	 * @since 01-06-2017
-	 * @return lista de clientes
+	 * @since 17-06-2017
+	 * @return lista de ingredientes
 	 * */
 	@GET
-	@Path("/teste")	
-	public String todosClientes() {		
-		return "teste";
+	@Path("/todos")	
+	public List<Ingrediente> todos() {		
+		return dao.todos();
 	}
-
+	
 }
