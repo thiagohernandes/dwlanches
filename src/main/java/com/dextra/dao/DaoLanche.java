@@ -82,11 +82,15 @@ public class DaoLanche extends DaoIngrediente {
 	public Lanche lancheId(int id,List<Ingrediente> ingredientes){
 		Lanche retorno = new Lanche();
 		List<Ingrediente> ingredientesLanche = new ArrayList<>();
-		
+		for(int i = 0; i < lanches.size(); i++){
+			if(lanches.get(i).getId() == id){
+				retorno = lanches.get(i); 
+				break;
+			}
+		}
 		for(int i = 0; i < ingredientes.size(); i++){
 			ingredientesLanche.add(ingredienteId(ingredientes.get(i).getId()));
 		}
-		
 		retorno.setIngredientes(ingredientesLanche);
 		return retorno;
 	}

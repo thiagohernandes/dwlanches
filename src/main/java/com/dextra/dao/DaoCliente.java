@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dextra.model.Cliente;
-import com.dextra.util.Util;
 
 /**
  * DAO Cliente
@@ -14,7 +13,6 @@ import com.dextra.util.Util;
 public class DaoCliente {
 	
 	private List<Cliente> clientes = new ArrayList<>();
-	private Util util = new Util();
 	
 	public DaoCliente(){
 		// Inserção de alguns clientes

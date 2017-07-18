@@ -30,7 +30,10 @@ public class Util {
 					v[posAtr] = v[posAtr].substring(posFind).replace("=", "")
 															.replace("}", "")
 															.replace("{", "")
-															.replace(" ", "");
+															.replace(" ", "")
+															.replace("id","")
+															.replace("[","")
+															.replace("]","");
 					break;
 				}
 			}			

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dextra.model.Ingrediente;
-import com.dextra.util.Util;
 
 /**
  * DAO Ingrediente
@@ -14,7 +13,6 @@ import com.dextra.util.Util;
 public class DaoIngrediente{
 	
 	private List<Ingrediente> ingredientes = new ArrayList<>();
-	private Util util = new Util();
 	
 	public DaoIngrediente(){
 		// Inserção de ingredientes básicos

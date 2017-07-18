@@ -56,8 +56,8 @@ public class DaoPedido {
 				lanchesPedido.add(daoLanche.lancheId(auxCodigoLanche));
 			} else {
 				// ingredientes personalizados 
-					List<Object> objIngrPersonalizado = Arrays.asList(vLanche[1]);
-					for(int w = 0; w < objIngrPersonalizado.size(); w++) {			
+					List<Object> objIngrPersonalizado = Arrays.asList(vLanche);
+					for(int w = 1; w < objIngrPersonalizado.size(); w++) {			
 						Object oIngrPersonalizado = objIngrPersonalizado.get(w);		
 						String[] vIngrPersonalizado = util.formataValoresObjeto(oIngrPersonalizado);
 						Ingrediente ingrediente = daoLanche.ingredienteId(Integer.parseInt(vIngrPersonalizado[0]));
