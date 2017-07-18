@@ -8,6 +8,7 @@ import javax.ws.rs.core.Application;
 
 import com.dextra.services.IngredienteService;
 import com.dextra.services.LancheService;
+import com.dextra.services.PedidoService;
 import com.dextra.services.PromocaoService;
 
 /**
@@ -29,6 +30,7 @@ public class AppService extends Application{
 		singletons.add(new PromocaoService());
 		singletons.add(new IngredienteService());
 		singletons.add(new LancheService());
+		singletons.add(new PedidoService());
 	}
 
 	@Override

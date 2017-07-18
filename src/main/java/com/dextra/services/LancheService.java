@@ -12,7 +12,7 @@ import com.dextra.dao.DaoLanche;
 import com.dextra.model.Lanche;
 
 /**
- * Serviços de Lanches
+ * Serviço/Resource de Lanches
  * @author Thiago Hernandes de Souza
  * @since 17-07-2017
  * */
@@ -31,7 +31,7 @@ public class LancheService {
 	 * @return lanches
 	 * */
 	@GET
-	@Path("/todas")	
+	@Path("/todos")	
 	public List<Lanche> todas() {		
 		return dao.todos();
 	}

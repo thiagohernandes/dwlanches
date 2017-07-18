@@ -12,7 +12,7 @@ import com.dextra.dao.DaoIngrediente;
 import com.dextra.model.Ingrediente;
 
 /**
- * Serviços de Ingredientes
+ * Serviço/Resource de Ingredientes
  * @author Thiago Hernandes de Souza
  * @since 17-07-2017
  * */

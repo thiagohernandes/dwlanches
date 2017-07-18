@@ -11,6 +11,10 @@ public class Ingrediente {
 	private String nome;
 	private double valor;
 	
+	public Ingrediente(){
+		
+	}
+	
 	public Ingrediente(int id, String nome, double valor){
 		this.id = id;
 		this.nome = nome;

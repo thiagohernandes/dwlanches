@@ -1,5 +1,8 @@
 package com.dextra.util;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 /**
  * Classe contendo funções auxiliares genéricas
  * @author Thiago Hernandes de Souza
@@ -11,6 +14,7 @@ public class Util {
 	 * Função para retornar os valores de um objeto
 	 * @author Thiago Hernandes de Souza
 	 * @since 17-07-2017
+	 * @param objeto
 	 * @return valores em formato de array
 	 * */	
 	public String[] formataValoresObjeto(Object o){
@@ -20,7 +24,7 @@ public class Util {
 		int posFind = 0;
 		
 		for(int posAtr = 0; posAtr < tamanhoObj; posAtr++) {
-			for(int pos = 0; pos < v[posAtr].length(); pos++ ){
+			for(int pos = 0; pos < v[posAtr].length(); pos++){
 				if(v[posAtr].trim().charAt(pos) == '='){
 					posFind = pos+1;
 					v[posAtr] = v[posAtr].substring(posFind).replace("=", "")
@@ -33,5 +37,18 @@ public class Util {
 		}
 		return v;
 	}
+	
+	/**
+	 * Formata string em data 
+	 * @author Thiago Hernandes de Souza
+	 * @since 14-06-2017
+	 * @param LocalDate
+	 * @return data formatada
+	 * */
+	public LocalDate formataStringToDate(String data){
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		LocalDate dataFormatada = LocalDate.parse(data,formatter);
+		 return dataFormatada;
+	}	
 
 }

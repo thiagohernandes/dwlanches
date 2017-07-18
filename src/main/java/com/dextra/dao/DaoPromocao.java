@@ -1,8 +1,8 @@
 package com.dextra.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import com.dextra.database.DatabaseInMemory;
 import com.dextra.model.Promocao;
 
 /**
@@ -12,14 +12,9 @@ import com.dextra.model.Promocao;
  * */
 public class DaoPromocao {
 	
-	private List<Promocao> promocoes = new ArrayList<>(); 
+	private List<Promocao> promocoes = DatabaseInMemory.getDbpromocoes(); 
 			
 	public DaoPromocao(){
-		// Promoções pré-definidas (sem lanches adicionados)
-		promocoes.add(new Promocao(1,"Light"));
-		promocoes.add(new Promocao(2,"Muita carne"));
-		promocoes.add(new Promocao(3,"Muito queijo"));
-		promocoes.add(new Promocao(4,"Inflação"));
 	}
 	
 	/**

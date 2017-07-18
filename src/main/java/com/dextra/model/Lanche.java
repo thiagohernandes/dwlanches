@@ -13,6 +13,9 @@ public class Lanche {
 	private String nome;
 	private List<Ingrediente> ingredientes;
 	
+	public Lanche(){
+		
+	}
 	public Lanche(int id, String nome, List<Ingrediente> ingredientes){
 		this.id = id;
 		this.nome = nome;
