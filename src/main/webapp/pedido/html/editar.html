@@ -1,0 +1,129 @@
+<div class="container">
+    <h3 ng-if="alterando === true">Edição de Agendamento</h3>
+    <h3 ng-if="alterando === false">Agendamento de Atendimento</h3>
+
+    <div class="row">
+	    <hr/>
+	</div>
+    
+    <form id="form-atendimento">
+        <div class="row" ng-if="edicaoAgendamentoService.erros && edicaoAgendamentoService.erros.length !== 0">
+            <div class="col-md-12">
+                <div class="alert alert-danger">
+                    <strong>{{ mensagens.corrija_erros }}</strong>
+                    <ul>
+                        <li ng-repeat="mensagem in edicaoAgendamentoService.erros">{{ mensagem }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+           
+        <div class="row" ng-if="salvoComSucesso">
+            <div class="col-md-12">
+                <div class="alert alert-success">
+                    {{ mensagens.salvo_com_sucesso }}
+                </div>
+            </div>
+        </div>
+   
+        <div class="row">
+        
+         <fieldset class="form-group col-md-3">
+                   <label for="data-cadastro">* Data de cadastro:</label>
+                   <p class="input-group input-group-sm">
+	                <input id="data-cadastro" type="text" class="form-control" 
+	                		uib-datepicker-popup ng-model="agendamento.datacadastro" 
+	                		is-open="datepickersAbertos.cadastro" 
+	                		ng-click="datepickersAbertos.cadastro = !datepickersAbertos.cadastro" />
+	                <span class="input-group-btn">
+	               		<button type="button" class="btn btn-default" 
+	               		ng-click="datepickersAbertos.cadastro = !datepickersAbertos.cadastro">
+	               		<i class="glyphicon glyphicon-calendar"></i></button>
+	             	</span>
+            		</p>
+                </fieldset>
+                
+                <fieldset class="form-group col-md-3">
+                   <label for="data-atendimento">* Data de atendimento</label>
+                   <p class="input-group input-group-sm">
+	                <input id="data-atendimento" type="text" class="form-control" 
+	                		uib-datepicker-popup ng-model="agendamento.dataatendimento" 
+	                		is-open="datepickersAbertos.atendimento" 
+	                		ng-click="datepickersAbertos.atendimento = !datepickersAbertos.atendimento" />
+	                <span class="input-group-btn">
+	               		<button type="button" class="btn btn-default" 
+	               		ng-click="datepickersAbertos.atendimento = !datepickersAbertos.atendimento">
+	               		<i class="glyphicon glyphicon-calendar"></i></button>
+	             	</span>
+            		</p>
+                </fieldset>
+                
+                <fieldset class="form-group col-md-3">
+                   <label for="horario-atendimento">* Horário de atendimento:</label>
+                   <p class="input-group input-group-sm">
+	                <input id="horario-atendimento" type="text" class="form-control" maxlength="5"
+	                 		masktime placeholder="hh:mm" ng-model="agendamento.horaatendimento"/>	                
+            		</p>
+                </fieldset> 
+                
+                <fieldset class="form-group col-md-3">
+                    <label for="filtro-posto-coleta">* Posto de Coleta:</label>
+                    <p class="input-group input-group-sm">
+                     <select style="width : 250px" ng-model="agendamento.postocoleta" class="form-control"
+ 				        ng-options="item.postocoleta for item in edicaoAgendamentoService.listaPostosColeta">
+ 				    	<option value="">Selecione o posto de coleta</option>
+					</select>
+					</p>
+                </fieldset>                      
+            </div>
+            
+            <div class="row">
+                <fieldset class="form-group col-md-6">
+                   <label for="filtro-paciente-nome">* Paciente(nome):</label>
+                   <p class="input-group input-group-sm">
+	                <input ng-disabled="true" style="width: 550px;" id="paciente-nome" type="text" class="form-control" 
+	                		ng-model="agendamento.paciente"/>	   
+	                <button type="button" class="btn btn-default" ng-click="abrirModalPaciente(agendamento)">Pesquisar</button>	                         
+            		</p>       		            		 
+                </fieldset>
+                
+                <fieldset class="form-group col-md-3">
+                    <label for="filtro-convenio">* Convênio:</label>
+                    <p class="input-group input-group-sm">
+                     <select style="width : 250px" ng-model="agendamento.convenio" class="form-control"
+ 				        ng-options="item.convenio for item in edicaoAgendamentoService.listaConvenios">
+ 				    	<option value="">Selecione o Convênio</option>
+					</select>
+					</p>
+                </fieldset> 
+                
+                <fieldset class="form-group col-md-3">
+                    <label for="filtro-medico">* Médico:</label>
+                    <p class="input-group input-group-sm">
+                     <select style="width : 250px" ng-model="agendamento.medico" class="form-control"
+ 				        ng-options="item.medicoespecialidade for item in edicaoAgendamentoService.listaMedicos">
+ 				    	<option value="">Selecione o médico</option>
+					</select>
+					</p>
+                </fieldset>   
+           </div>
+        <div class="row">
+                <fieldset class="form-group col-md-6">
+                   <label>* CAMPOS OBRIGATÓRIOS</label>
+                </fieldset>
+        </div>                 
+        <div class="row">
+            <div class="col-md-6">
+                <button class="btn btn-primary" type="button" 
+                ng-click="salvar()">Salvar</button>
+                <button class="btn btn-default" type="button" 
+                ng-click="cancelar()">Cancelar/Voltar</button>
+            </div>
+        </div>
+        
+        <div class="row">
+	    	<hr/>
+		</div>
+    </form>
+    
+</div>

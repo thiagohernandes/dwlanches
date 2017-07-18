@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dextra.model.Cliente;
+import com.dextra.model.Ingrediente;
 
 /**
  * DAO Cliente
@@ -30,5 +31,20 @@ public class DaoCliente {
 		return clientes;
 	}
 	
+	/**
+	 * Método de retorno de um cliente específico
+	 * @author Thiago Hernandes de Souza
+	 * @since 18-07-2017
+	 * */
+	public Cliente clienteId(int id){
+		Cliente retorno = new Cliente();
+		for(int i = 0; i < clientes.size(); i++){
+			if(clientes.get(i).getId() == id){
+				retorno = clientes.get(i); 
+				break;
+			}
+		}
+		return retorno;
+	}
 
 }

@@ -1,0 +1,11 @@
+<nav class="navbar navbar-inverse navbar-fixed-top" ng-controller="MenuCtrl">         
+    <ul class="nav navbar-nav" style="list-style: none;" 
+    	ng-repeat="menu in opcoesMenu.menus">
+    	<a href="#top" role="button" class="navbar-brand" ng-if="$first">
+	       <img src="/dw-lanches/img/logo_dextra.png" class="logo"></img>
+	    </a> 
+	 	<li style="display: inline;">
+	 		<a href="{{menu.url}}">{{menu.nome}}</a>
+	 	</li>
+	</ul> 
+</nav>

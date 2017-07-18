@@ -1,0 +1,14 @@
+{
+	"menus": [
+		{
+			"nome": "Página inicial",
+			"url": "/dw-lanches/index.html"
+		},
+		{	"nome": "Consultar Pedidos",
+			"url": "/dw-lanches/pedido/#/consultar"
+		},
+		{	"nome": "Realizar Pedido", 
+			"url": "/dw-lanches/pedido/#/adicionar"
+		}		
+	]
+}

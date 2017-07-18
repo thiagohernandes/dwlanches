@@ -21,7 +21,7 @@ public class DaoPedido {
 	private List<Pedido> pedidos = new ArrayList<>();
 	private Util util = new Util();
 	private DaoLanche daoLanche = new DaoLanche();
-	
+	private DaoCliente daoCliente = new DaoCliente();
 	/**
 	 * Método de retorno de todos os pedidos
 	 * @author Thiago Hernandes de Souza
@@ -43,7 +43,7 @@ public class DaoPedido {
 		// cliente
 		Object  objCliente = pedido.get("cliente");	
 		String[] valoresCliente = util.formataValoresObjeto(objCliente);
-		Cliente cliente = new Cliente(Integer.parseInt(valoresCliente[0]),valoresCliente[1]);
+		Cliente cliente = daoCliente.clienteId(Integer.parseInt(valoresCliente[0]));
 			
 		// lanches
 		List<Object> objLanche = (List<Object>) pedido.get("lanches"); 

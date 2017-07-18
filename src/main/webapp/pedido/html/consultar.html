@@ -1,0 +1,223 @@
+<div class="container">
+
+	<div class="row">
+    	<h3>Consulta de Agendamentos</h3>
+	</div>
+
+	<div class="row">
+	    <hr/>
+	</div>
+
+	<div class="row">
+	    <form>	    
+	        <div class="row" ng-if="pesquisaAgendamentoService.erros && pesquisaAgendamentoService.erros.length !== 0">
+	            <div class="col-md-12">
+	                <div class="alert alert-danger">
+	                    <strong>{{ mensagens.preencha_informacoes_realizar_pesquisa }}</strong>
+	                    <ul>
+	                        <li ng-repeat="mensagem in pesquisaAgendamentoService.erros">{{ mensagem }}</li>
+	                    </ul>
+	                </div>
+	            </div>
+	        </div>
+	        
+	         <div class="row" ng-if="pesquisaAgendamentoService.excluiu">
+	            <div class="col-md-12">
+	                <div class="alert alert-success">
+	                    {{ mensagens.exclusao_sucesso }}	                    
+	                </div>
+	            </div>
+	        </div>	         
+
+            <div class="row">
+            
+                <fieldset class="form-group col-md-3">
+                   <label for="data-atendimento-inicial">* Data de atendimento inicial:</label>
+                   <p class="input-group input-group-sm">
+	                <input id="data-atendimento-inicial" type="text" class="form-control" 
+	                		uib-datepicker-popup ng-model="pesquisaAgendamentoService.filtros.dataatendimentoinicial" 
+	                		is-open="datepickersAbertos.atendimentoInicial" 
+	                		ng-click="datepickersAbertos.atendimentoInicial = !datepickersAbertos.atendimentoInicial" />
+	                <span class="input-group-btn">
+	               		<button type="button" class="btn btn-default" 
+	               		ng-click="datepickersAbertos.atendimentoInicial = !datepickersAbertos.atendimentoInicial">
+	               		<i class="glyphicon glyphicon-calendar"></i></button>
+	             	</span>
+            		</p>
+                </fieldset>
+                
+                <fieldset class="form-group col-md-3">
+                   <label for="data-atendimento-final">* Data de atendimento final:</label>
+                   <p class="input-group input-group-sm">
+	                <input id="data-atendimento-final" type="text" class="form-control" 
+	                		uib-datepicker-popup ng-model="pesquisaAgendamentoService.filtros.dataatendimentofinal" 
+	                		is-open="datepickersAbertos.atendimentoFinal" 
+	                		ng-click="datepickersAbertos.atendimentoFinal = !datepickersAbertos.atendimentoFinal" />
+	                <span class="input-group-btn">
+	               		<button type="button" class="btn btn-default" 
+	               		ng-click="datepickersAbertos.atendimentoFinal = !datepickersAbertos.atendimentoFinal">
+	               		<i class="glyphicon glyphicon-calendar"></i></button>
+	             	</span>
+            		</p>
+                </fieldset>
+                
+                <fieldset class="form-group col-md-3">
+                   <label for="data-cadastro-inicial">Data de cadastro inicial:</label>
+                   <p class="input-group input-group-sm">
+	                <input id="data-cadastro-inicial" type="text" class="form-control" 
+	                		uib-datepicker-popup ng-model="pesquisaAgendamentoService.filtros.datacadastroinicial" 
+	                		is-open="datepickersAbertos.cadastroInicial" 
+	                		ng-click="datepickersAbertos.cadastroInicial = !datepickersAbertos.cadastroInicial" />
+	                <span class="input-group-btn">
+	               		<button type="button" class="btn btn-default" 
+	               		ng-click="datepickersAbertos.cadastroInicial = !datepickersAbertos.cadastroInicial">
+	               		<i class="glyphicon glyphicon-calendar"></i></button>
+	             	</span>
+            		</p>
+                </fieldset>
+                
+                <fieldset class="form-group col-md-3">
+                   <label for="data-cadastro-final">Data de cadastro final:</label>
+                   <p class="input-group input-group-sm">
+	                <input id="data-cadastro-final" type="text" class="form-control" 
+	                		uib-datepicker-popup ng-model="pesquisaAgendamentoService.filtros.datacadastrofinal" 
+	                		is-open="datepickersAbertos.cadastroFinal" 
+	                		ng-click="datepickersAbertos.cadastroFinal = !datepickersAbertos.cadastroFinal" />
+	                <span class="input-group-btn">
+	               		<button type="button" class="btn btn-default" 
+	               		ng-click="datepickersAbertos.cadastroFinal = !datepickersAbertos.cadastroFinal">
+	               		<i class="glyphicon glyphicon-calendar"></i></button>
+	             	</span>
+            		</p>
+                </fieldset>                        
+            </div>
+            
+            <div class="row">
+                <fieldset class="form-group col-md-6">
+                   <label for="filtro-paciente-nome">* Paciente(nome):</label>
+                   <p class="input-group input-group-sm">
+	                <input style="width: 550px;" id="paciente-nome" type="text" class="form-control" 
+	                		ng-model="pesquisaAgendamentoService.filtros.paciente"/>	               
+            		</p>
+                </fieldset>
+                <fieldset class="form-group col-md-6">
+                    <label for="filtro-convenio">Convênio:</label>
+                    <p class="input-group input-group-sm">
+                     <select style="width : 550px" ng-model="pesquisaAgendamentoService.filtros.convenio" class="form-control"
+ 				        ng-options="item.convenio for item in pesquisaAgendamentoService.listaConvenios">
+ 				    	<option value="">Selecione o Convênio</option>
+					</select>
+					</p>
+                </fieldset>   
+           </div>
+           
+           <div class="row">
+                <fieldset class="form-group col-md-6">
+                    <label for="filtro-medico">Médico:</label>
+                    <p class="input-group input-group-sm">
+                     <select style="width : 550px" ng-model="pesquisaAgendamentoService.filtros.medico" class="form-control"
+ 				        ng-options="item.medicoespecialidade for item in pesquisaAgendamentoService.listaMedicos">
+ 				    	<option value="">Selecione o médico</option>
+					</select>
+					</p>
+                </fieldset>   
+                
+                <fieldset class="form-group col-md-6">
+                    <label for="filtro-posto-coleta">Posto de Coleta:</label>
+                    <p class="input-group input-group-sm">
+                     <select style="width : 550px" ng-model="pesquisaAgendamentoService.filtros.postocoleta" class="form-control"
+ 				        ng-options="item.postocoleta for item in pesquisaAgendamentoService.listaPostosColeta">
+ 				    	<option value="">Selecione o posto de coleta</option>
+					</select>
+					</p>
+                </fieldset>   
+			</div>
+			<div class="row">
+                <fieldset class="form-group col-md-6">
+                   <label>* CAMPOS OBRIGATÓRIOS</label>
+                </fieldset>
+       		</div>   
+			
+            <div class="row">
+                <fieldset class="col-md-9">
+                    <div class="form-group">
+                        <button id="btn-pesquisar" class="btn btn-primary" type="button" 
+                        		ng-click="pesquisaAgendamentoService.pesquisar(3)"><i class="glyphicon glyphicon-search"></i> Pesquisar</button>
+                        <a id="btn-limpar-resultado" class="btn btn-default" type="button" 
+                        		ng-click="pesquisaAgendamentoService.limpar()"><i class="glyphicon glyphicon-erase"></i> Limpar resultado</a>
+                        <a id="btn-criar-cliente" class="btn btn-default" type="button" href="#/adicionar">
+                        		<i class="glyphicon glyphicon-plus"></i> Adicionar Agendamento</a>    
+                        <select id="limite" style="width : 200px; border: solid;border-width: 1px;background-color: white;" 
+                        	class="btn" ng-model="pesquisaAgendamentoService.filtros.limite">
+	 				    	<option value="">Limite de registros</option>
+	 				    	<option value="5">5</option>
+	 				    	<option value="10">10</option>
+	 				    	<option value="50">50</option>
+						</select>                    
+					</div>	
+                </fieldset>  
+            </div>
+        </form>
+    </div>
+    
+    <div class="row">
+        <hr/>
+    </div>
+    
+    <div class="row" ng-if="pesquisaAgendamentoService.nenhumRegistroEncontrado">
+        <div class="col-md-12">
+            <div class="alert alert-warning">
+             	{{ mensagens.nao_foram_encontrados_agendamentos }}
+            </div>
+        </div>
+    </div>
+    <div style="display:table-cell; vertical-align:middle; text-align:center">
+    	<a ng-show="pesquisaAgendamentoService.offset >= 5 && pesquisaAgendamentoService.resultadoPesquisa.length > 0"
+    		id="btn-anterior" class="btn btn-default" type="button" ng-click="pesquisaAgendamentoService.anterior()">
+                        		<i class="glyphicon glyphicon-backward"></i> Anterior</a> 
+	    <a ng-show="pesquisaAgendamentoService.resultadoPesquisa.length >= 5" 
+	    id="btn-proximo" class="btn btn-default" type="button" ng-click="pesquisaAgendamentoService.proximo()">
+                        		<i class="glyphicon glyphicon-forward"></i> Próximo</a> 
+	</div>
+    <div class="row pre-scrollable">
+        <table class="table table-condensed" ng-if="pesquisaAgendamentoService.resultadoPesquisa.length > 0">
+            <thead>
+                <tr class="borda-esquerda-tabela borda-direita-tabela">
+                    <th class="text-center">Codigo</th>
+                    <th class="text-center borda-direita-tabela">Data de Cadastro</th>                 
+                    <th class="text-center borda-direita-tabela">Data de Atendimento</th>
+                    <th class="text-center borda-direita-tabela">Hora de Atendimento</th>
+                    <th class="text-center borda-direita-tabela">Paciente</th>
+                    <th class="text-center borda-direita-tabela">Convênio</th>
+                    <th class="text-center borda-direita-tabela">Posto de Coleta</th>
+                    <th class="text-center borda-direita-tabela">Médico</th>  
+                    <th class="text-center borda-direita-tabela">Ações</th>           
+                </tr>
+            </thead>
+
+            <tbody ng-repeat="item in pesquisaAgendamentoService.resultadoPesquisa">
+                <tr class="text-center borda-inferior-tabela borda-esquerda-tabela borda-direita-tabela" ng-class="{success: $first}">
+                    <td align="right">{{item.codigo}}</td>
+                    <td align="center">{{item.datacadastro}}</td>
+                    <td align="center">{{item.dataatendimento}}</td>
+                    <td align="center">{{item.horaatendimento}}</td>
+                    <td align="left">{{item.paciente}}</td>
+                    <td align="left">{{item.convenio}}</td>
+                    <td align="left">{{item.postocoleta}}</td>    
+                    <td align="left">{{item.medico}}</td>
+                    <td>
+                     <a id="btn-criar-cliente" class="btn btn-warning" type="button" href="#/editar/{{item.codigo}}">                     
+                        		<i class="glyphicon glyphicon-edit"></i></a>                   
+                     <a id="btn-criar-cliente" class="btn btn-danger" type="button"
+                     ng-click="pesquisaAgendamentoService.confirmarExclusao(item.codigo)">                     
+                        		<i class="glyphicon glyphicon-remove"></i></a>
+                    </td>                
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="row">
+	    <hr/>
+	</div>
+</div>
