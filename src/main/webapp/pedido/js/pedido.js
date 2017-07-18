@@ -48,7 +48,7 @@
     /**PesquisarPedidoCtrl
      * Controller de pesquisa que receberá a injeção de serviços
      * */ 
-    agendamento.controller('PesquisarAgendamentoCtrl', ['$scope',
+    pedido.controller('PesquisarAgendamentoCtrl', ['$scope',
     											   'PesquisaPedidoService', 
     											   'MensagensPedidoService',
     											   '$window',
@@ -77,7 +77,7 @@
     /**PesquisaPedidoService
      * factory/serviço de pesquisa de pedidos
      * */ 
-    agendamento.factory('PesquisaPedidoService', 
+    pedido.factory('PesquisaPedidoService', 
     											  ['$http', 
     											  'MensagensPedidoService', 
     											  '$q',
@@ -154,7 +154,7 @@
                     function (response) { 
                     	pesquisaPedidoService.resultadoPesquisa = response.data;
                     	pesquisaPedidoService.nenhumRegistroEncontrado =
-                    		(pesquisaAgendamentoService.resultadoPesquisa.length === 0);            			
+                    		(pesquisaPedidoService.resultadoPesquisa.length === 0);            			
                     },
                     function (response) {
                             window.console.log(response);
@@ -188,7 +188,7 @@
     /**EdicaoPedidoService
      * factory/serviço de edição de pedidos
      * */ 
-    agendamento.factory('EdicaoPedidoService', ['$http', 
+    pedido.factory('EdicaoPedidoService', ['$http', 
     											'$q', 
     											'MensagensPedidoService', 
     											'PesquisaPedidoService',
@@ -204,95 +204,58 @@
                 listaClientes : [],
                 listaLanches : [],
                 listaIngredientes : [],
+                listaLanchesSelecionados : [],
+                listaIngredientesSelecionados : [],
                 erros : []
         };
         
-        function validar(agendamento, resultado) {
+        function validar(pedido, resultado) {
             
-        	edicaoAgendamentoService.erros = [];
+        	edicaoPedidoService.erros = [];
         	
-            if(utilService.isNullOrUndefined(agendamento.paciente)){
-            	edicaoAgendamentoService.erros.push(mensagens.informe_o_nome_do_paciente);            	
+            if(utilService.isNullOrUndefined(pedido.cliente)){
+            	edicaoPedidoService.erros.push(mensagens.informe_o_cliente);            	
             }
-            if(!utilService.isNullOrUndefined(agendamento.paciente)){
-	            if (agendamento.toString().length < 4){
-	            	edicaoAgendamentoService.erros.push(mensagens.digite_ao_menos_4_caracteres);
-	        	}
-            }            
-            if(utilService.isNullOrUndefined(agendamento.dataatendimento)){
-            	edicaoAgendamentoService.erros.push(mensagens.informe_a_data_atendimento);
-            }
-            if(utilService.isNullOrUndefined(agendamento.datacadastro)){
-            	edicaoAgendamentoService.erros.push(mensagens.informe_a_data_cadastro);
-            } 
-            if(utilService.isNullOrUndefined(agendamento.horaatendimento)){
-            	edicaoAgendamentoService.erros.push(mensagens.informe_a_hora_atendimento);
-            } 
-            if(conversorData.horaInvalida(agendamento.horaatendimento)){
-            	edicaoAgendamentoService.erros.push(mensagens.horario_invalido);
-            }            
-            if(!utilService.isNullOrUndefined(agendamento.datacadastro)
-            		&& !utilService.isNullOrUndefined(agendamento.dataatendimento)){
-		            if(agendamento.dataatendimento < 
-		            		agendamento.datacadastro){
-		            	edicaoAgendamentoService.erros.push(mensagens.data_cadastro_maior_data_atendimento);
-		            }
-            } 
-            if(utilService.isNullOrUndefined(agendamento.medico)){
-            	edicaoAgendamentoService.erros.push(mensagens.informe_o_medico);
+            if(utilService.isNullOrUndefined(pedido.datapedido)){
+            	edicaoPedidoService.erros.push(mensagens.informe_a_data_pedido);
             }
             
-            if(utilService.isNullOrUndefined(agendamento.convenio)){
-            	edicaoAgendamentoService.erros.push(mensagens.informe_o_convenio);
-            }
-            
-            if(utilService.isNullOrUndefined(agendamento.postocoleta)){
-            	edicaoAgendamentoService.erros.push(mensagens.informe_o_posto_coleta);
-            }
-          
             if (edicaoAgendamentoService.erros.length !== 0) {
-                resultado.reject(edicaoAgendamentoService.erros);
+                resultado.reject(edicaoPedidoService.erros);
                 return false;
             }
             return true;
         }
         
-        function montarDados(agendamento) { 
+        function montarDados(pedido) { 
         	var dados = {};
-        	dados.codigo_paciente = edicaoAgendamentoService.codigo_paciente;
-        	if(agendamento.dataatendimento instanceof Date === true){
-        		dados.dataatendimento = conversorData.string(agendamento.dataatendimento);
-        	} else {
-        		dados.dataatendimento = moment(agendamento.dataatendimento).format('DD/MM/YYYY');
+        	dados.cliente.id = pedido.cliente.id;
+        	dados.pedido.data = moment(pedido.datapedido).format('DD/MM/YYYY');
+        	dados.vltotal = pedido.vltotal;
+        	
+        	dados.lanches.id = [];        	
+        	for(var i = 0; i < pedido.listaLanchesSelecionados; i++){
+        		dados.lanches.id.push(pedido.listaLanchesSelecionados.id); 
         	}
-        	if(agendamento.datacadastro instanceof Date === true) {
-        		dados.datacadastro = conversorData.string(agendamento.datacadastro);	
-        	} else {
-        		dados.datacadastro = moment(agendamento.datacadastro).format('DD/MM/YYYY');
-        	}        	       	
-        	dados.horaatendimento = agendamento.horaatendimento;
-        	dados.codigo_medico = agendamento.medico.codigo;
-        	dados.codigo_convenio = agendamento.convenio.codigo;
-        	dados.codigo_postocoleta = agendamento.postocoleta.codigo;
-          
-            if (edicaoAgendamentoService.erros.length !== 0) {
-                resultado.reject(edicaoAgendamentoService.erros);
-                return dados;
-            }
+        	
+        	dados.ingredientes = [];
+        	for(var i = 0; i < pedido.listaIngredientesSelecionados; i++){
+        		dados.ingredientes.id.push(pedido.listaIngredientesSelecionados.id); 
+        	}
             return dados;
         }
 
-        function atualizar(agendamento, resultado) { 
-            $http.put('/shift-app/rest/agendamentos/alterar/' + agendamento.codigo, montarDados(agendamento)).then(function (response) {
-                resultado.resolve(agendamento);
+        function atualizar(pedido, resultado) { 
+            $http.put('/dw-lanches/rest/pedidos/alterar/' + pedido.id, montarDados(pedido)).then(function (response) {
+                resultado.resolve(pedido);
             }, function (response) {
             	alert("Houve algum problema!");
                 resultado.reject(response.data);
             });
         }
 
-        function criar(agendamento, resultado) {        	
-            $http.post('/shift-app/rest/agendamentos/novo', montarDados(agendamento)).then(function (response) {
+        function criar(pedido, resultado) {        	
+            $http.post('/dw-lanches/rest/pedidos/novo', montarDados(pedido)).then(function (response) {
                 resultado.resolve(response.data);
             }, function (response) {
             	if(response.status == 500){
@@ -302,9 +265,9 @@
             });
         }
 
-        edicaoAgendamentoService.carregar = function (codigo) { 
+        edicaoPedidoService.carregar = function (id) { 
             var resultado = $q.defer();
-            $http.get('/shift-app/rest/agendamentos/codigo/' + codigo).then(function (response) {
+            $http.get('/dw-lanches/rest/pedidos/id/' + id).then(function (response) {
                 resultado.resolve(response.data);
             }, function (response) {
             	alert("Houve algum problema!");
@@ -313,25 +276,25 @@
             return resultado.promise;
         };
        
-        edicaoAgendamentoService.salvar = function (agendamento,alterando) { 
+        edicaoPedidoService.salvar = function (pedido,alterando) { 
             var resultado = $q.defer();
-            if (validar(agendamento, resultado)) {
-                if (alterando === true) {
-                    atualizar(agendamento, resultado);
+            if (validar(pedido, resultado)) {
+                if (pedido === true) {
+                    atualizar(pedido, resultado);
                 } else {                	
-                    criar(agendamento, resultado);
+                    criar(pedido, resultado);
                 }
-                pesquisaAgendamentoService.resultadoPesquisa = [];
+                edicaoPedidoService.resultadoPesquisa = [];
             }
             return resultado.promise;
         };
         
-        edicaoAgendamentoService.carregarComboMedicos = function() {                  		
-            $http.get('/shift-app/rest/medicos/todos').then(function (response) {            	
-            	edicaoAgendamentoService.listaMedicos = response.data;            	
+        edicaoPedidoService.carregarComboClientes = function() {                  		
+            $http.get('/dw-lanches/rest/clientes/todos').then(function (response) {            	
+            	edicaoPedidoService.listaClientes = response.data;            	
             }, function (response) {
             	if (response.status === 400 && response.data.erros) {
-            		edicaoAgendamentoService.erros = response.data.erros;
+            		edicaoPedidoService.erros = response.data.erros;
                 } else {
                     window.console.log(response);
                     window.alert(mensagens.erro_carregar_medicos_especialidades);
@@ -339,289 +302,128 @@
             });            
         };  
         
-        edicaoAgendamentoService.carregarComboConvenios = function() {                  		
-            $http.get('/shift-app/rest/convenios/todos').then(function (response) {            	
-            	edicaoAgendamentoService.listaConvenios = response.data;            	
+        edicaoPedidoService.carregarComboLanches = function() {                  		
+            $http.get('/dw-lanches/rest/lanches/todos').then(function (response) {            	
+            	edicaoPedidoService.listaLanches = response.data;            	
             }, function (response) {            	
                     window.console.log(response);
                     window.alert(mensagens.erro_carregar_convenios);               
             });            
         }; 
-        
-        edicaoAgendamentoService.carregarComboPostosColeta = function() {                  		
-            $http.get('/shift-app/rest/postoscoleta/todos').then(function (response) {            	
-            	edicaoAgendamentoService.listaPostosColeta = response.data;            	
-            }, function (response) {            	
-                    window.console.log(response);
-                    window.alert(mensagens.erro_carregar_postos_coleta);
-            });            
-        }; 
 
-        return edicaoAgendamentoService;
+        return edicaoPedidoService;
     }]);
 
-    /**EditarAgendamentoCtrl
-     * Controller de edição de agendamentos que receberá a injeção de servicos
+    /**EditarPedidoCtrl
+     * Controller de edição de pedidos que receberá a injeção de servicos
      * */ 
-    agendamento.controller('EditarAgendamentoCtrl', 
+    pedido.controller('EditarPedidoCtrl', 
     											['$scope',
     											'$routeParams', 
     											'$timeout', 
-    											'EdicaoAgendamentoService', 
-    											'MensagensAgendamentoService',    											
+    											'EdicaoPedidoService', 
+    											'MensagensPedidoService',    											
     											'$uibModal',
     											'UtilService',
     											'$http',
     											'ConversorDataService',
     											'$filter',
-    											'PesquisaAgendamentoService',    											
+    											'PesquisaPedidoService',    											
                                                  function ($scope,
                                                 		   $routeParams, 
                                                 		   $timeout, 
-                                                		   edicaoAgendamentoService, 
+                                                		   edicaoPedidoService, 
                                                 		   mensagens,
                                                 		   $uibModal,
                                                 		   utilService,
                                                 		   $http,
                                                 		   conversorData,
                                                 		   $filter,
-                                                		   pesquisaAgendamentoService) {
+                                                		   pesquisaPedidoService) {
     												
-        $scope.pesquisaAgendamentoService = pesquisaAgendamentoService;
+        $scope.pesquisaPedidoService = pesquisaPedidoService;
     	$scope.mensagens = mensagens;
-    	$scope.edicaoAgendamentoService = edicaoAgendamentoService;
-    	$scope.filtros = {
-    			nome : null,
-    			datanascimento : null,
-    			erros : [],
-    			resultadoPesquisa : [],
-    			nenhumRegistroEncontrado : false
-    	};
-    	$scope.gravacaoNaoPermitida = false;
-    	   	
-        function validarFiltrosPacientes(){ 
-        	var resultado = true;
-        	$scope.filtros.erros = [];
-            
-            if(utilService.isNullOrUndefined($scope.filtros.nome)){
-            	resultado = false;
-            	$scope.filtros.erros.push(mensagens.informe_o_nome_do_paciente);            	
-            }
-            if(!utilService.isNullOrUndefined($scope.filtros.nome)){
-	            if ($scope.filtros.nome.toString().length < 4){
-	        		resultado = false;
-	        		$scope.filtros.erros.push(mensagens.digite_ao_menos_4_caracteres);
-	        	}
-            } 
-            return resultado;
-        };
-        
-        function montarFiltrosPesquisaPacientes() { 
-            var params = {};
-            
-            if(!utilService.isNullOrUndefined($scope.filtros.nome)){
-            	params.nome = $scope.filtros.nome;
-            }            
-            
-            if (!utilService.isNullOrUndefined($scope.filtros.datanascimento)) {
-            	var d1 = $scope.filtros.datanascimento;
-            	params.datanascimento = conversorData.string(d1);
-            }
-            return params;
-        };
-        
-        $scope.pesquisarPacientes = function () { 
-        	var params = {};
-        	$scope.filtros.resultadoPesquisa = [];
-            if (validarFiltrosPacientes()) {               
-                $http.get('/shift-app/rest/pacientes/consulta/',{params : montarFiltrosPesquisaPacientes()}).then(
-                    function (response) {
-                    	$scope.filtros.resultadoPesquisa = response.data;
-                    	$scope.filtros.nenhumRegistroEncontrado = ($scope.filtros.resultadoPesquisa.length === 0);            			
-                    },
-                    function (response) {
-                            window.console.log(response);
-                            window.alert(mensagens.erro_ao_pesquisar);
-                    }
-                );
-            }
-        };
-    	
-        $scope.limparPacientes = function () {
-        	$scope.filtros.nome = null;
-        	$scope.filtros.datanascimento = null;
-        	$scope.filtros.erros = [];
-        	$scope.filtros.resultadoPesquisa = [];
-        	$scope.filtros.nenhumRegistroEncontrado = false;
-        	$scope.edicaoAgendamentoService.codigo_paciente = null;
-        	$scope.pesquisaAgendamentoService.excluiu = false;
-        };
-        
-        $scope.selecionarPaciente = function (codigo,nome){ 
-        	edicaoAgendamentoService.codigo_paciente = codigo;
-        	$scope.agendamento.paciente = nome;
-        };
-        
-        $scope.cancelarSelecaoPaciente = function (){ 
-        	edicaoAgendamentoService.codigo_paciente = null;
-        	$scope.agendamento.paciente = null;
-        };
-    	    
-    	$scope.datepickersAbertos = {
-                 cadastro : false,
-                 atendimento : false,
-                 atendimenotDN : false
-         }; 
+    	$scope.edicaoPedidoService = edicaoPedidoService;
     	
     	$scope.carregarCombos = function(){
-            $scope.edicaoAgendamentoService.carregarComboMedicos();
-            $scope.edicaoAgendamentoService.carregarComboPostosColeta();
-            $scope.edicaoAgendamentoService.carregarComboConvenios();
+            $scope.pesquisaPedidoService.carregarComboClientes();
+            $scope.pesquisaPedidoService.carregarComboLanches();
     	};
     	
     	 $scope.inicializarAtributos = function(){
-         	$scope.agendamento = {
-                     codigo_paciente : null,
-                 	 datacadastro : null,
-                     dataatendimento : null,
-                     medico : null,
-                     convenio : null,
-                     postocoleta : null,
-                     horaatendimento : null,
-                     pacienteConsulta : null,
-                     pacienteDNConsulta : null
+         	$scope.pedido = {
+                     cliente : {},
+                 	 datapedido : null,
+                     vltotal : 0.00,
+                     listaLanchesSelecionados : [],
+                     listaIngredientesSelecionados : []
                  };
          };
 
     	if ($routeParams.id) { 
     		$scope.inicializarAtributos();
     		$scope.carregarCombos();
-    		edicaoAgendamentoService.carregar($routeParams.id).then(function (agendamento) { 
-                $scope.agendamento.dataatendimento = agendamento[0].dataatendimento;
-    			$scope.agendamento.datacadastro = agendamento[0].datacadastro;
-    			$scope.agendamento.horaatendimento = agendamento[0].horaatendimento.substring(0,5); 
+    		edicaoPedidoService.carregar($routeParams.id).then(function (pedido) { 
+                $scope.pedido.datapedido = pedido[0].datapedido;
+                $scope.pedido.vltotal = pedido[0].vltotal;
     		
-    		 var indexConvenio = -1;
-	         for(var i = 0, len = $scope.edicaoAgendamentoService.listaConvenios.length; i < len; i++) {
-	        	if ($scope.edicaoAgendamentoService.listaConvenios[i].convenio === agendamento[0].convenio) {
-	        	  indexConvenio = i;
+    		 var indexCliente = -1;
+	         for(var i = 0, len = $scope.edicaoPedidoService.listaClientes.length; i < len; i++) {
+	        	if ($scope.edicaoPedidoService.listaClientes[i].cliente === pedido[0].cliente) {
+	        		indexCliente = i;
 	        	  break;
 	        	}
 	         }               	
-             $scope.agendamento.convenio = $scope.edicaoAgendamentoService.listaConvenios[indexConvenio]; 
-             
-             var indexMedico = -1;
-	         for(var i = 0, len = $scope.edicaoAgendamentoService.listaMedicos.length; i < len; i++) {
-	        	if ($scope.edicaoAgendamentoService.listaMedicos[i].medicoespecialidade === agendamento[0].medicoespecialidade) {
-	        	  indexMedico = i;
-	        	  break;
-	        	}
-	         }               	
-             $scope.agendamento.medico = $scope.edicaoAgendamentoService.listaMedicos[indexMedico]; 
-             
-             var indexPostoColeta = -1;
-	         for(var i = 0, len = $scope.edicaoAgendamentoService.listaPostosColeta.length; i < len; i++) {
-	        	if ($scope.edicaoAgendamentoService.listaPostosColeta[i].postocoleta === agendamento[0].postocoleta) {
-	        	  indexPostoColeta = i;
-	        	  break;
-	        	}
-	         }               	
-             $scope.agendamento.postocoleta = $scope.edicaoAgendamentoService.listaPostosColeta[indexPostoColeta]; 
-             $scope.agendamento.codigo_paciente = agendamento[0].codigo_paciente;
-             $scope.agendamento.codigo = agendamento[0].codigo;
-             $scope.agendamento.paciente = agendamento[0].paciente;
-             $scope.edicaoAgendamentoService.codigo_paciente = agendamento[0].codigo_paciente;
-    			   			
+             $scope.pedido.cliente = $scope.edicaoPedidoService.listaClientes[indexCliente]; 
+                           			   			
              $scope.alterando = true;
              
             }, function (erros) {
-                $scope.edicaoAgendamentoService.erros = erros;
+                $scope.edicaoPedidoService.erros = erros;
             });
         } else {
         	$scope.inicializarAtributos();
-            $scope.edicaoAgendamentoService.erros = [];
+            $scope.edicaoPedidoService.erros = [];
             $scope.salvoComSucesso = false;
             $scope.alterando = false;
             $scope.carregarCombos();
         }
 
         $scope.salvar = function () { 
-        	if (utilService.isNullOrUndefined(edicaoAgendamentoService.codigo_paciente)){
-        		$scope.gravacaoNaoPermitida = true;
-            	edicaoAgendamentoService.erros.push(mensagens.gravacao_nao_permitida);
-        		return;
-        	}
-        	
-        edicaoAgendamentoService.salvar($scope.agendamento,$scope.alterando).then(function (resultado) {                
-                $scope.edicaoAgendamentoService.erros = [];
+        	edicaoPedidoService.salvar($scope.pedido,$scope.alterando).then(function (resultado) {                
+                $scope.edicaoPedidoService.erros = [];
                 $scope.salvoComSucesso = true;
                 setTimeout(function(){ 
                 	window.location.href = "#/consultar";
                 	}, 2000);
             }, function (erros) {
-                $scope.edicaoAgendamentoService.erros = erros;
+                $scope.edicaoPedidoService.erros = erros;
                 $scope.salvoComSucesso = false;
             });
         };
         
         $scope.cancelar = function(){
         	$scope.inicializarAtributos();        	
-            $scope.edicaoAgendamentoService.erros = [],
-            $scope.pesquisaAgendamentoService.excluiu = false;
+            $scope.edicaoPedidoService.erros = [],
+            $scope.pesquisaPedidoService.excluiu = false;
             $scope.salvoComSucesso = false; 
             $scope.alterando = false;
             
             window.location.href = "#/consultar";
         };
         
-        $scope.abrirModalPaciente = function(agendamento){   
-        	$scope.gravacaoNaoPermitida = false;        	
-        	    var modalInstance = $uibModal.open({
-        	        templateUrl: '/shift-app/agendamento/html/modal-paciente.html',
-        	        controller: 'ModalInstancePacienteCtrl',
-        	        controllerAs : '$ctrl',
-        	        size: 'lg',
-        	        scope: $scope,
-        	        bindToController: true,
-        	        resolve: {
-        	            agendamento: function () {
-        	              return agendamento;
-        	            }
-        	        }
-        	    	}).result.then(function(result) { 
-        			});         	        
-        };       
     }]);
     
     /**Factory de Mensagens
      * factory/serviço que realiza o carregamento de mensagens no formato JSON
      * */ 
-    agendamento.factory('MensagensAgendamentoService', ['$http', function($http) {
+    pedido.factory('MensagensPedidoService', ['$http', function($http) {
         var mensagens = {};
-    	$http.get('/shift-app/agendamento/mensagens.json').then(function (response) {
+    	$http.get('/dw-lanches/pedido/mensagens.json').then(function (response) {
     		angular.copy(response.data, mensagens);
     	});    	
     	return mensagens;
     }]);
-    
-    /**ModalInstancePacienteCtrl
-     * Controller da modal de seleção de paciente
-     * */
-    agendamento.controller('ModalInstancePacienteCtrl',
-											['$uibModalInstance','$scope',
-								            function ($uibModalInstance,$scope) { 
-    	  var $ctrl = this;   	  
-    	  $ctrl.ok = function () {    		
-    	    $uibModalInstance.close(true);
-    	  };
-
-    	  $ctrl.cancelar = function () {
-    		  
-    		$scope.$parent.cancelarSelecaoPaciente();
-    	    $uibModalInstance.dismiss('cancel');
-    	  };
-    
-	}]);
     
     /**ModalInstanceConfirmacaoCtrl
      * Controller da modal de confirmação de exclusão
@@ -639,33 +441,5 @@
 		};
 		
 		}]); 
-    
-    agendamento.factory('LoginService', [ '$http', 
-										  '$q',
-										   function ($http, 
-													 $q) {
-    		var loginService = {
-						teste : null
-			};
-			
-			return loginService;
-    }]);
-    
-    /**Login
-     * Controller do login da aplicação
-     * */
-    agendamento.controller('LoginCtrl',['$scope',"$http","$q",'LoginService','SessionStorageService','$window',
-								         function ($scope,$http,$q,loginService,sessionStorageService,$window) { 
-			$scope.login = function(user,pass) {   			
-				$scope.dadosLogin = {
-							user : null,
-							pass : null
-				};
-				$scope.dadosLogin.user = user;
-				$scope.dadosLogin.pass = pass;
-				sessionStorageService.saveUserSession($window,$scope.dadosLogin);				
-			};
-    
-	}]); 
     
 }());
