@@ -22,7 +22,7 @@ public class AppService extends Application{
 	private Set<Object> singletons = new HashSet<Object>();
 
 	/**
-	 * Método de inclusão de resources
+	 * Métodos App Singleton
 	 * @author Thiago Hernandes de Souza
 	 * @since 17-07-2017
 	 * */

@@ -32,7 +32,7 @@ public class LancheService {
 	 * */
 	@GET
 	@Path("/todos")	
-	public List<Lanche> todas() {		
-		return dao.todos();
+	public List<Lanche> todos() {		
+		return dao.todosLanches();
 	}
 }

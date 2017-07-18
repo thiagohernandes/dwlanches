@@ -16,11 +16,15 @@ public class Lanche {
 	public Lanche(){
 		
 	}
+	public Lanche(int id, String nome){
+		this.id = id;
+		this.nome = nome;
+	}	
 	public Lanche(int id, String nome, List<Ingrediente> ingredientes){
 		this.id = id;
 		this.nome = nome;
 		this.ingredientes = ingredientes;
-	}	
+	}
 	public int getId() {
 		return id;
 	}

@@ -16,6 +16,9 @@ public class Pedido {
 	private List<Lanche> lanches;
 	private double valorTotal;
 	
+	public Pedido(){
+	}
+	
 	public Pedido(int id, LocalDate data, Cliente cliente, List<Lanche> lanches, double valorTotal){
 		this.id = id;
 		this.data = data;

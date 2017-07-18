@@ -33,7 +33,7 @@ public class IngredienteService {
 	@GET
 	@Path("/todos")	
 	public List<Ingrediente> todos() {		
-		return dao.todos();
+		return dao.todosIngredientes();
 	}
 	
 }

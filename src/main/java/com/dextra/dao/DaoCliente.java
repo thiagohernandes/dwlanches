@@ -3,7 +3,6 @@ package com.dextra.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dextra.database.DatabaseInMemory;
 import com.dextra.model.Cliente;
 import com.dextra.util.Util;
 
@@ -14,10 +13,14 @@ import com.dextra.util.Util;
  * */
 public class DaoCliente {
 	
-	List<Cliente> clientes = DatabaseInMemory.getDbclientes();
-	Util util = new Util();
+	private List<Cliente> clientes = new ArrayList<>();
+	private Util util = new Util();
 	
 	public DaoCliente(){
+		// Inserção de alguns clientes
+		clientes.add(new Cliente(1,"Fulano da Silva")); 
+		clientes.add(new Cliente(2,"Beltrano dos Santos"));
+		clientes.add(new Cliente(3,"Delana Dantas"));
 	}
 	
 	/**

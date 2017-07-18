@@ -3,9 +3,7 @@ package com.dextra.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dextra.database.DatabaseInMemory;
 import com.dextra.model.Ingrediente;
-import com.dextra.model.Lanche;
 import com.dextra.util.Util;
 
 /**
@@ -13,10 +11,10 @@ import com.dextra.util.Util;
  * @author Thiago Hernandes de Souza
  * @since 17-07-2017
  * */
-public class DaoIngrediente {
+public class DaoIngrediente{
 	
-	List<Ingrediente> ingredientes = DatabaseInMemory.getDbingredientes();
-	Util util = new Util();
+	private List<Ingrediente> ingredientes = new ArrayList<>();
+	private Util util = new Util();
 	
 	public DaoIngrediente(){
 		// Inserção de ingredientes básicos
@@ -32,7 +30,7 @@ public class DaoIngrediente {
 	 * @author Thiago Hernandes de Souza
 	 * @since 17-07-2017
 	 * */
-	public List<Ingrediente> todos(){
+	public List<Ingrediente> todosIngredientes(){
 		return ingredientes;
 	}
 	
