@@ -60,16 +60,6 @@
 					</select>
 					</p>
                 </fieldset> 
-                <fieldset class="form-group col-md-3">
-                    <label for="filtro-cliente">Lanche:</label>
-                    <p class="input-group input-group-sm">
-                     <select style="width : 250px" ng-model="pesquisaPedidoService.filtros.lanche"
-                      class="form-control"
- 				      ng-options="item.nome for item in pesquisaPedidoService.listaLanches">
- 				    	<option value="">Todos</option>
-					</select>
-					</p>
-                </fieldset> 
             </div>
 			
             <div class="row">
@@ -121,14 +111,14 @@
                     <td align="left">{{item.cliente.id}}-{{item.cliente.nome}}</td>
                     <td align="left">R$ {{item.valorTotal}}</td>
                     <td>
-                     <a id="btn-editar" class="btn btn-warning" type="button" href="#/editar/{{item.id}}">                     
-                        		<i class="glyphicon glyphicon-edit"></i></a>                   
+                    <a id="btn-editar" class="btn btn-warning" type="button" href="#/editar/{{item.id}}">                     
+                        		<i class="glyphicon glyphicon-edit"></i></a> 
                      <a id="btn-excluir" class="btn btn-danger" type="button"
                      ng-click="pesquisaPedidoService.confirmarExclusao(item.id)">                     
                         		<i class="glyphicon glyphicon-remove"></i></a>
-                      <a id="btn-lanches" class="btn btn-info" type="button"
+					  <a id="btn-lanches" class="btn btn-info" type="button"
                      ng-click="abrirModalLanches(pesquisaPedidoService,item.id)">                     
-                        		<i class="glyphicon glyphicon-th-list"></i></a>   		
+                        		<i class="glyphicon glyphicon-th-list"></i></a> 
                     </td>                
                 </tr>
             </tbody>

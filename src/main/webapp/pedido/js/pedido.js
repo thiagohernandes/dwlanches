@@ -121,13 +121,24 @@
         
         function validarFiltrosPesquisa() { 
         	var resultado = true;
-                	
-            if(!utilService.isNullOrUndefined(pesquisaPedidoService.filtros.cliente) &&
-            		!utilService.isNullOrUndefined(pesquisaPedidoService.filtros.lanche)){
+            if(
+            	(!utilService.isNullOrUndefined(pesquisaPedidoService.filtros.cliente) &&
+            		!utilService.isNullOrUndefined(pesquisaPedidoService.filtros.numeropedido) &&
+            				!utilService.isNullOrUndefined(pesquisaPedidoService.filtros.datapedido))
+            				||
+            	(!utilService.isNullOrUndefined(pesquisaPedidoService.filtros.cliente) &&
+            	     		!utilService.isNullOrUndefined(pesquisaPedidoService.filtros.numeropedido))
+            	     		||
+            	(!utilService.isNullOrUndefined(pesquisaPedidoService.filtros.numeropedido) &&
+                    		!utilService.isNullOrUndefined(pesquisaPedidoService.filtros.datapedido))  
+                    		||
+                (!utilService.isNullOrUndefined(pesquisaPedidoService.filtros.cliente) &&
+                    		!utilService.isNullOrUndefined(pesquisaPedidoService.filtros.datapedido))
+            				){
+            	pesquisaPedidoService.limpar();
             	resultado = false;
-            	pesquisaAgendamentoService.erros.push(mensagens.pesquisa_cliente_lanche);            	
+            	pesquisaPedidoService.erros.push(mensagens.pesquina_nao_permitida);            	
             }
-           
             return resultado;
         };
         
@@ -139,9 +150,6 @@
             }
             if (pesquisaPedidoService.filtros.cliente) {
             	params.clienteid = pesquisaPedidoService.filtros.cliente.id;
-            }
-            if (pesquisaPedidoService.filtros.lanche) {
-            	params.lancheid = pesquisaPedidoService.filtros.lanche.id;
             }
             if (pesquisaPedidoService.filtros.numeropedido) {
             	params.numeropedido = pesquisaPedidoService.filtros.numeropedido;

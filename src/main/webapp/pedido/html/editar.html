@@ -1,18 +1,18 @@
 <div class="container">
-    <h3 ng-if="alterando === true">Edição de Agendamento</h3>
-    <h3 ng-if="alterando === false">Agendamento de Atendimento</h3>
+    <h3 ng-if="alterando === true">Edição de Pedido</h3>
+    <h3 ng-if="alterando === false">Criação de Pedido</h3>
 
     <div class="row">
 	    <hr/>
 	</div>
     
     <form id="form-atendimento">
-        <div class="row" ng-if="edicaoAgendamentoService.erros && edicaoAgendamentoService.erros.length !== 0">
+        <div class="row" ng-if="edicaoPedidoService.erros && edicaoPedidoService.erros.length !== 0">
             <div class="col-md-12">
                 <div class="alert alert-danger">
-                    <strong>{{ mensagens.corrija_erros }}</strong>
+                    <strong>{{ mensagens.informacao_pesquisa }}</strong>
                     <ul>
-                        <li ng-repeat="mensagem in edicaoAgendamentoService.erros">{{ mensagem }}</li>
+                        <li ng-repeat="mensagem in edicaoPedidoService.erros">{{ mensagem }}</li>
                     </ul>
                 </div>
             </div>
@@ -70,7 +70,7 @@
                     <label for="filtro-posto-coleta">* Posto de Coleta:</label>
                     <p class="input-group input-group-sm">
                      <select style="width : 250px" ng-model="agendamento.postocoleta" class="form-control"
- 				        ng-options="item.postocoleta for item in edicaoAgendamentoService.listaPostosColeta">
+ 				        ng-options="item.postocoleta for item in edicaoPedidoService.listaPostosColeta">
  				    	<option value="">Selecione o posto de coleta</option>
 					</select>
 					</p>
@@ -91,7 +91,7 @@
                     <label for="filtro-convenio">* Convênio:</label>
                     <p class="input-group input-group-sm">
                      <select style="width : 250px" ng-model="agendamento.convenio" class="form-control"
- 				        ng-options="item.convenio for item in edicaoAgendamentoService.listaConvenios">
+ 				        ng-options="item.convenio for item in edicaoPedidoService.listaConvenios">
  				    	<option value="">Selecione o Convênio</option>
 					</select>
 					</p>
@@ -101,7 +101,7 @@
                     <label for="filtro-medico">* Médico:</label>
                     <p class="input-group input-group-sm">
                      <select style="width : 250px" ng-model="agendamento.medico" class="form-control"
- 				        ng-options="item.medicoespecialidade for item in edicaoAgendamentoService.listaMedicos">
+ 				        ng-options="item.medicoespecialidade for item in edicaoPedidoService.listaMedicos">
  				    	<option value="">Selecione o médico</option>
 					</select>
 					</p>

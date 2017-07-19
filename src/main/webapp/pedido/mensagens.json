@@ -2,5 +2,6 @@
    "informacao_pesquisa" : "Informação! Verifique os itens abaixo",
    "exclusao_sucesso" : "Exclusão efetuada com sucesso!",
    "nenhum_registro_encontrado" : "Nenhum registro encontrado!",
-   "pesquisa_cliente_lanche" : "Selecione um cliente ou um tipo de lanche!"
+   "pesquina_nao_permitida" : "Para pesquisar selecione: ou a data ou número ou um cliente!",
+   "gravacao_nao_permitida" : "Informe: a data, o cliente e ao menos um lanche!"
  }
