@@ -1,6 +1,6 @@
 {
-
    "informacao_pesquisa" : "Informação! Verifique os itens abaixo",
    "exclusao_sucesso" : "Exclusão efetuada com sucesso!",
-   "nenhum_registro_encontrado" : "Nenhum registro encontrado!"
+   "nenhum_registro_encontrado" : "Nenhum registro encontrado!",
+   "pesquisa_cliente_lanche" : "Selecione um cliente ou um tipo de lanche!"
  }

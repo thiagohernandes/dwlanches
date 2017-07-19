@@ -1,0 +1,23 @@
+<div class="modal-header">
+   <h3 class="modal-title">Lanches do Pedido</h3>
+</div>
+	
+<div class="modal-body">
+
+	<table class="table table-condensed" ng-if="pesquisaPedidoService.resultadoPesquisaLanches.length > 0">
+            <thead>
+                <tr class="borda-esquerda-tabela borda-direita-tabela">
+                    <th class="text-center">Descrição</th>
+                </tr>
+            </thead>
+            <tbody ng-repeat="item in pesquisaPedidoService.resultadoPesquisaLanches">
+                <tr class="text-center">
+                    <td align="left">{{item.nome}}</td>
+                </tr>
+            </tbody>
+        </table>
+</div>
+
+<div class="modal-footer">
+   <button class="btn btn-primary" type="button" ng-click="$ctrl.ok()">Ok</button>
+</div>

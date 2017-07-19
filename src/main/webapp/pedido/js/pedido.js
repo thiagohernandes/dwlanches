@@ -51,10 +51,12 @@
     											   'PesquisaPedidoService', 
     											   'MensagensPedidoService',
     											   '$window',
+    											   '$uibModal',
     											   function ($scope, 
     													   	 pesquisaPedidoService, 
     													   	 mensagens,
-    													   	 $window
+    													   	 $window,
+    													   	 $uibModal
     													   	 ) {
   
         $scope.pesquisaPedidoService = pesquisaPedidoService;
@@ -71,6 +73,24 @@
         
         $scope.pesquisaPedidoService.carregarComboClientes();
         $scope.pesquisaPedidoService.carregarComboLanches();
+        
+        $scope.abrirModalLanches = function(pedido,id){  
+        	$scope.pesquisaPedidoService.lanchesPedido(id);
+        	    var modalInstance = $uibModal.open({
+        	        templateUrl: '/dw-lanches/pedido/html/modal-lanches.html',
+        	        controller: 'ModalLancheCtrl',
+        	        controllerAs : '$ctrl',
+        	        size: 'sm',
+        	        scope: $scope,
+        	        bindToController: true,
+        	        resolve: {
+        	        	pedido: function () {
+        	              return pedido;
+        	            }
+        	        }
+        	    	}).result.then(function(result) { 
+        			});         	        
+        }; 
         
     }]);
 
@@ -97,7 +117,19 @@
             listaClientes : [],
             listaLanches : [],
             excluiu : false
-        };       
+        };     
+        
+        function validarFiltrosPesquisa() { 
+        	var resultado = true;
+                	
+            if(!utilService.isNullOrUndefined(pesquisaPedidoService.filtros.cliente) &&
+            		!utilService.isNullOrUndefined(pesquisaPedidoService.filtros.lanche)){
+            	resultado = false;
+            	pesquisaAgendamentoService.erros.push(mensagens.pesquisa_cliente_lanche);            	
+            }
+           
+            return resultado;
+        };
         
         function montarFiltrosPesquisa() { 
         	var params = {};
@@ -125,22 +157,35 @@
         	pesquisaPedidoService.excluiu = false;
         };
         
+        
         pesquisaPedidoService.confirmarExclusao = function(codigo){   
         	    var modalInstance = $uibModal.open({
         	        templateUrl: '/dw-lanches/pedido/html/modal-confirmacao.html',
         	        controller: 'ModalInstanceConfirmacaoCtrl',
         	        controllerAs : '$ctrl',
         	        size: 'sm'
-        	    	}).result.then(function(result) { debugger
+        	    	}).result.then(function(result) { 
         				if(result){ 
         					excluir(codigo);	
         				}
         			});         	        
         }; 
         
+        pesquisaPedidoService.lanchesPedido = function (id) {              
+        	  $http.get('/dw-lanches/rest/pedidos/lanches/'+id).then(
+                      function (response) { 
+                      	pesquisaPedidoService.resultadoPesquisaLanches = response.data;
+                      },
+                      function (response) {
+                              window.console.log(response);
+                              window.alert(mensagens.erro_ao_pesquisar);
+                      }
+                  );           
+        };
+        
         function excluir(codigo) {              
                 	var resultado = $q.defer();
-                    $http.delete('/dw-lanches/rest/pedidos/excluir/' + codigo).then(function (response) { debugger
+                    $http.delete('/dw-lanches/rest/pedidos/excluir/' + codigo).then(function (response) { 
                     	pesquisaPedidoService.limpar(); 
                     	pesquisaPedidoService.excluiu = true;
                         resultado.resolve(pedido);                
@@ -153,6 +198,7 @@
         	pesquisaPedidoService.excluiu = false;
         	pesquisaPedidoService.resultadoPesquisa = [];
         	pesquisaPedidoService.erros = [];
+        	if (validarFiltrosPesquisa()) {
                 $http.get('/dw-lanches/rest/pedidos/pesquisar/',{params : montarFiltrosPesquisa()}).then(
                     function (response) { 
                     	pesquisaPedidoService.resultadoPesquisa = response.data;
@@ -164,6 +210,7 @@
                             window.alert(mensagens.erro_ao_pesquisar);
                     }
                 );
+            }
         };
         
         pesquisaPedidoService.carregarComboClientes = function() {                  		
@@ -444,5 +491,22 @@
 		};
 		
 		}]); 
+    
+    /**ModalInstancePacienteCtrl
+     * Controller da modal de seleção de paciente
+     * */
+    pedido.controller('ModalLancheCtrl',
+											['$uibModalInstance','$scope',
+								            function ($uibModalInstance,$scope) { 
+    	  var $ctrl = this;   	  
+    	  $ctrl.ok = function () {    		
+    	    $uibModalInstance.close(true);
+    	  };
+
+    	  $ctrl.cancelar = function () {    		  
+    	    $uibModalInstance.dismiss('cancel');
+    	  };
+    
+	}]);
     
 }());

@@ -199,5 +199,22 @@ public class DaoPedido {
 		}
 		return r;
 	}
+	
+	/**
+	 * Método de retorno de todos os lanches de um pedido
+	 * @author Thiago Hernandes de Souza
+	 * @since 19-07-2017
+	 * */
+	public List<Lanche> lanchesPedido(int id){
+		List<Lanche> lista = new ArrayList<>();
+		for(int x = 0; x < pedidos.size(); x++){
+			if(pedidos.get(x).getId() == id){
+				for(int l = 0; l < pedidos.get(x).getLanches().size(); l++){
+					lista.add(pedidos.get(x).getLanches().get(l));
+				}
+			}
+		}
+		return lista;
+	}
 
 }

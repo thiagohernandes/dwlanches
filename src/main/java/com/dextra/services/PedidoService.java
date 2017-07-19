@@ -16,6 +16,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import com.dextra.dao.DaoPedido;
+import com.dextra.model.Lanche;
 import com.dextra.model.Pedido;
 
 /**
@@ -41,6 +42,18 @@ public class PedidoService {
 	@Path("/todos")	
 	public List<Pedido> todos() {		
 		return dao.todos();
+	}
+	
+	/**
+	 * Retornar todos lanches de um pedido
+	 * @author Thiago Hernandes de Souza
+	 * @since 19-07-2017
+	 * @return lista de lanches
+	 * */
+	@GET
+	@Path("/lanches/{id}")
+	public List<Lanche> lanchesPedido(@PathParam("id") int id){		
+		return dao.lanchesPedido(id);
 	}
 	
 	/**
