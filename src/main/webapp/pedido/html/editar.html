@@ -103,8 +103,8 @@
                     <td align="right">R$ {{item.valorTotal}}</td>
                     <td>
                      <a id="btn-excluir" class="btn btn-danger" type="button"
-                     ng-click="">                     
-                        		<i class="glyphicon glyphicon-remove"></i></a>
+                     ng-click="removerLanche($index,item.valorTotal)">                     
+                        <i class="glyphicon glyphicon-remove"></i></a>
                     </td>                
                 </tr>
             </tbody>
@@ -113,7 +113,7 @@
         </div>
         <div class="row">
          <fieldset class="form-group col-md-6">
-         <h4>Valor total -> R$ {{pedido.vltotal}}</h4>
+         <h4>Valor total -> R$ {{pedido.vltotal | number : 2}}</h4>
          </fieldset>
          </div>
         

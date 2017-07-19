@@ -109,7 +109,7 @@
                     <td align="right">{{item.id}}</td>
                     <td align="center">{{item.dataFormatada}}</td>
                     <td align="left">{{item.cliente.id}}-{{item.cliente.nome}}</td>
-                    <td align="left">R$ {{item.valorTotal}}</td>
+                    <td align="left">R$ {{item.valorTotal | number : 2}}</td>
                     <td>
                     <a id="btn-editar" class="btn btn-warning" type="button" href="#/editar/{{item.id}}">                     
                         		<i class="glyphicon glyphicon-edit"></i></a> 

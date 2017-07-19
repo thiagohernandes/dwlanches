@@ -22,6 +22,7 @@ public class DaoPedido {
 	private Util util = new Util();
 	private DaoLanche daoLanche = new DaoLanche();
 	private DaoCliente daoCliente = new DaoCliente();
+	static int numeroPedido = 0;
 	
 	/**
 	 * Método de retorno de todos os pedidos
@@ -75,7 +76,8 @@ public class DaoPedido {
 		
 		// inserção
 		if(flag == 1) {
-		Pedido novoPedido = new Pedido(pedidos.size()+1,
+		numeroPedido+=1;	
+		Pedido novoPedido = new Pedido(numeroPedido,
 					   util.formataStringToDate(valoresPedido[0]),
 					   cliente,
 					   lanchesPedido,
@@ -121,6 +123,14 @@ public class DaoPedido {
 				break;
 			}
 		}
+		for(int s = 0; s < retorno.getLanches().size(); s++){
+			double valor = 0;
+			for(int m = 0; m < retorno.getLanches().get(s).getIngredientes().size(); m++){
+				valor+=retorno.getLanches().get(s).getIngredientes().get(m).getValor();
+			}
+			retorno.getLanches().get(s).setValorTotal(valor);
+		}
+		
 		return retorno;
 	}
 	

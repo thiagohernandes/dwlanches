@@ -275,6 +275,7 @@
         	edicaoPedidoService.erros = [];        	
             if(utilService.isNullOrUndefined(pedido.cliente)
             		|| utilService.isNullOrUndefined(pedido.datapedido)
+            		|| pedido.listaLanchesSelecionados.length < 1
             		){
             	edicaoPedidoService.erros.push(mensagens.gravacao_nao_permitida);            	
             }
@@ -285,7 +286,7 @@
             return true;
         }
         
-        function montarDados(pedido) {  debugger
+        function montarDados(pedido) {  
         	var dados = {
         			cliente : {},
         			pedido : {},
@@ -337,7 +338,7 @@
 
         edicaoPedidoService.carregar = function (id) { 
             var resultado = $q.defer();
-            $http.get('/dw-lanches/rest/pedidos/id/' + id).then(function (response) { debugger
+            $http.get('/dw-lanches/rest/pedidos/id/' + id).then(function (response) { 
                 resultado.resolve(response.data);
             }, function (response) {
             	window.console.log(response);
@@ -447,7 +448,12 @@
 	        	  break;
 	        	}
 	         }               	
-             $scope.pedido.cliente = $scope.edicaoPedidoService.listaClientes[indexCliente];                            			   			
+             $scope.pedido.cliente = $scope.edicaoPedidoService.listaClientes[indexCliente];      
+             
+             for(var z = 0; z < pedido.lanches.length; z++){
+            	 $scope.pedido.listaLanchesSelecionados.push(pedido.lanches[z]);
+             }
+             
              $scope.alterando = true;
              
             }, function (erros) {
@@ -463,7 +469,7 @@
     	
     	$scope.adicionarLanche = function(idLanche){ 
     		$http.get('/dw-lanches/rest/pedidos/lanche/'+idLanche).then(
-                    function (response) { debugger
+                    function (response) { 
                        $scope.pedido.listaLanchesSelecionados.push(response.data);
                        $scope.pedido.vltotal+=response.data.valorTotal; 
                     },
@@ -472,6 +478,12 @@
                             window.alert(mensagens.erro_ao_consultar_valor_lanche);
                     }
                 ); 
+    	};
+    	
+    	$scope.removerLanche = function(index,valor){ debugger
+    		$scope.pedido.listaLanchesSelecionados.splice(index,1);
+            $scope.pedido.vltotal-=valor;
+            $scope.pedido.vltotal.toFixed(2);
     	};
 
         $scope.salvar = function () { 
@@ -483,7 +495,6 @@
                 	}, 2000);
             }, function (erros) {
             	window.console.log(erros);
-                window.alert(mensagens.erro_ao_salvar);
                 $scope.salvoComSucesso = false;
             });
         };
