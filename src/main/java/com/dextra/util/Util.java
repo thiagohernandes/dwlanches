@@ -44,7 +44,7 @@ public class Util {
 	/**
 	 * Formata string em data 
 	 * @author Thiago Hernandes de Souza
-	 * @since 14-06-2017
+	 * @since 18-07-2017
 	 * @param LocalDate
 	 * @return data formatada
 	 * */

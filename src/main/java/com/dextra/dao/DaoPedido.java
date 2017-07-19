@@ -22,6 +22,7 @@ public class DaoPedido {
 	private Util util = new Util();
 	private DaoLanche daoLanche = new DaoLanche();
 	private DaoCliente daoCliente = new DaoCliente();
+	
 	/**
 	 * Método de retorno de todos os pedidos
 	 * @author Thiago Hernandes de Souza
@@ -90,6 +91,55 @@ public class DaoPedido {
 				break;
 			}
 		}
+	}
+	
+	/**
+	 * Método de pesquisa de pedidos
+	 * @author Thiago Hernandes de Souza
+	 * @since 18-07-2017
+	 * */
+	public List<Pedido> pesquisar(Map<String,String> parametros){
+		List<Pedido> pesquisa = new ArrayList();
+		
+		// enviou o número do pedido
+		if(!parametros.get("numeropedido").isEmpty()){
+			for(int i = 0; i < pedidos.size(); i++){
+				if(pedidos.get(i).getId() == Integer.parseInt(parametros.get("numeropedido").toString())){
+					pesquisa.add(pedidos.get(i));
+					break;
+				}
+			}
+		} else {
+			// enviou a data do pedido
+			if(!parametros.get("datapedido").isEmpty()){
+				for(int i = 0; i < pedidos.size(); i++){
+					if(pedidos.get(i).getData() == util.formataStringToDate(parametros.get("datapedido").toString())){
+						pesquisa.add(pedidos.get(i)); 
+					}
+				}
+			}
+			// enviou o cliente do pedido
+			if(!parametros.get("clienteid").isEmpty()){
+				for(int i = 0; i < pedidos.size(); i++){
+					if(pedidos.get(i).getCliente().getId() == Integer.parseInt(parametros.get("clienteid").toString())){
+						pesquisa.add(pedidos.get(i)); 
+					}
+				}
+			}
+			// enviou o lanche do pedido
+			if(!parametros.get("lancheid").isEmpty()){
+				for(int i = 0; i < pedidos.size(); i++){
+					for(int l = 0; l < pedidos.get(i).getLanches().size(); l++){
+						if(pedidos.get(i).getLanches().get(l).getId() == 
+								Integer.parseInt(parametros.get("lancheid").toString())){
+							pesquisa.add(pedidos.get(i)); 
+						}
+					}
+				}
+			}
+		}
+		
+		return pesquisa;
 	}
 
 }

@@ -12,7 +12,7 @@
     menu.controller('MenuCtrl', ['$scope', '$http', function ($scope, $http) {
     	
     	$scope.carregarMenu = function(){
-		    $http.get('/shift-app/rest/menu').then(function (response) {
+		    $http.get('/dw-lanches/rest/menu').then(function (response) {
 		        $scope.opcoesMenu = response.data;
 		    }, function (response) {
 		        window.alert('Ocorreu um erro ao carregar o menu!');

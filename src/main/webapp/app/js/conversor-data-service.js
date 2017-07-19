@@ -28,56 +28,6 @@
             return string;
         };
         
-        conversorDataService.horaInvalida = function (string) { 
-        	var invalida = false;
-        	var finalHora = false;
-        	if(string != null && string != undefined){
-        	for (var i = 0, len = string.length; i < len; i++) {
-        		  if(string[i] === '_' || string[i] === '' ){
-        			  invalida = true;
-        			  break; 
-        		  }        		 
-        		  if(i == 0) {        			  
-        			  if(string[i] > 1){
-	        			  invalida = true;
-	        			  break;
-        			  }
-        		  }
-        		  if(i == 1) {        			  
-        			  if(string[i] > 8){
-	        			  invalida = true;
-	        			  break;
-        			  } 
-        			  if(string[i] == 8){
-        				  finalHora = true;
-        			  } else {
-        				  finalHora = false;
-        			  }
-        		  }
-        		  if(i == 3) {        			  
-        			  if(string[i] > 5){
-	        			  invalida = true;
-	        			  break;
-        			  }
-        			  if(finalHora == true){
-        				  if(string[i] > 0){
-        					  invalida = true;
-        					  break;
-        				  }
-        			  }
-        		  }  
-        		  if(i == 4) {
-        			  if(finalHora == true){
-        				  if(string[i] > 0){
-        					  invalida = true;
-        					  break;
-        				  }
-        			  }
-        		  } 
-        		  } 
-        	}
-        	return invalida;
-        };
         
         conversorDataService.data = function (string) {
             var dma = string.split('/');

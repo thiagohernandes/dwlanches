@@ -6,6 +6,8 @@ import java.util.Set;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
+import com.dextra.menu.MenuService;
+import com.dextra.services.ClienteService;
 import com.dextra.services.IngredienteService;
 import com.dextra.services.LancheService;
 import com.dextra.services.PedidoService;
@@ -31,6 +33,8 @@ public class AppService extends Application{
 		singletons.add(new IngredienteService());
 		singletons.add(new LancheService());
 		singletons.add(new PedidoService());
+		singletons.add(new MenuService());
+		singletons.add(new ClienteService());
 	}
 
 	@Override

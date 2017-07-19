@@ -1,5 +1,6 @@
 package com.dextra.services;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +11,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import com.dextra.dao.DaoPedido;
@@ -31,7 +33,7 @@ public class PedidoService {
 	/**
 	 * Retornar todos os pedidos
 	 * @author Thiago Hernandes de Souza
-	 * @since 17-06-2017
+	 * @since 17-07-2017
 	 * @return lista de pedidos
 	 * */
 	@GET
@@ -43,7 +45,7 @@ public class PedidoService {
 	/**
 	 * Inserir um pedido
 	 * @author Thiago Hernandes de Souza
-	 * @since 18-06-2017
+	 * @since 18-07-2017
 	 * */
 	@POST
 	@Path("/inserir")
@@ -54,12 +56,33 @@ public class PedidoService {
 	/**
 	 * Excluir um pedido
 	 * @author Thiago Hernandes de Souza
-	 * @since 18-06-2017
+	 * @since 18-07-2017
 	 * */
 	@DELETE
 	@Path("/excluir/{id}")
 	public void excluir(@PathParam("codigo") int id){
 		dao.excluir(id);
+	}
+	
+	/**
+	 * Pesquisa genérica
+	 * @author Thiago Hernandes de souza
+	 * @since 18-07-2017
+	 * @param clienteid, numeropedido, datapedido, lancheid
+	 * @return List<Map>
+	 * */
+	@GET
+	@Path("/pesquisar")		
+	public List<Pedido> pesquisar(@QueryParam("clienteid") String clienteId,
+							      @QueryParam("numeropedido") String numeroPedido,
+							      @QueryParam("datapedido") String datapedido,
+							      @QueryParam("lancheid") String lancheid){
+		Map<String,String> parametros = new HashMap<>();
+		parametros.put("clienteid", clienteId);
+		parametros.put("numeropedido", numeroPedido);
+		parametros.put("datapedido", datapedido);
+		parametros.put("lancheid", lancheid);
+		return dao.pesquisar(parametros);			
 	}
 	
 }

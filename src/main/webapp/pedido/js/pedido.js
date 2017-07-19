@@ -17,7 +17,6 @@
     													 'dextra.menu', 
     													 'dextra.data',
     													 'dextra.util',
-    													 'dextra.directives',
     													 'ui.utils.masks']);
     
     /** Rotas da aplicação
@@ -48,7 +47,7 @@
     /**PesquisarPedidoCtrl
      * Controller de pesquisa que receberá a injeção de serviços
      * */ 
-    pedido.controller('PesquisarAgendamentoCtrl', ['$scope',
+    pedido.controller('PesquisarPedidoCtrl', ['$scope',
     											   'PesquisaPedidoService', 
     											   'MensagensPedidoService',
     											   '$window',
@@ -65,9 +64,10 @@
         	});
         };
         
+        $scope.somenteNumeros = /^\d+$/;
         $scope.mensagens = mensagens;
         $scope.datepickersAbertos = {
-                data : false
+                datapedido : false
          };   
         $scope.pesquisaPedidoService.carregarComboClientes();
         $scope.pesquisaPedidoService.carregarComboLanches();
@@ -104,11 +104,14 @@
             var params = {
             		datapedido: conversorData.string(dataPedido)
             };
-            if (pesquisaAgendamentoService.filtros.cliente) {
-            	params.cliente = pesquisaPedidoService.filtros.cliente.id;
+            if (pesquisaPedidoService.filtros.cliente) {
+            	params.clienteid = pesquisaPedidoService.filtros.cliente.id;
             }
-            if (pesquisaAgendamentoService.filtros.numeropedido) {
-            	params.pedido = pesquisaPedidoService.filtros.numeropedido;
+            if (pesquisaPedidoService.filtros.lanche) {
+            	params.lancheid = pesquisaPedidoService.filtros.lanche.id;
+            }
+            if (pesquisaPedidoService.filtros.numeropedido) {
+            	params.numeropedido = pesquisaPedidoService.filtros.numeropedido;
             }
             return params;
         };
@@ -136,7 +139,7 @@
         
         function excluir(codigo) {              
                 	var resultado = $q.defer();
-                    $http.delete('/dw-lanches/rest/pedido/excluir/' + codigo).then(function (response) {
+                    $http.delete('/dw-lanches/rest/pedidos/excluir/' + codigo).then(function (response) {
                     	pesquisaPedidoService.limpar(); 
                     	pesquisaPedidoService.excluiu = true;
                         resultado.resolve(pedido);                
@@ -144,7 +147,6 @@
                         resultado.reject(response.data);
                     });                 
         };
-        
 
         pesquisaPedidoService.pesquisar = function () { 
         	pesquisaPedidoService.excluiu = false;
@@ -220,7 +222,7 @@
             	edicaoPedidoService.erros.push(mensagens.informe_a_data_pedido);
             }
             
-            if (edicaoAgendamentoService.erros.length !== 0) {
+            if (edicaoPedidoService.erros.length !== 0) {
                 resultado.reject(edicaoPedidoService.erros);
                 return false;
             }
@@ -428,7 +430,7 @@
     /**ModalInstanceConfirmacaoCtrl
      * Controller da modal de confirmação de exclusão
      * */
-    agendamento.controller('ModalInstanceConfirmacaoCtrl',
+    pedido.controller('ModalInstanceConfirmacaoCtrl',
 			['$uibModalInstance','$scope',
             function ($uibModalInstance,$scope) { 
 		var $ctrl = this;   	  
