@@ -3,5 +3,7 @@
    "exclusao_sucesso" : "Exclusão efetuada com sucesso!",
    "nenhum_registro_encontrado" : "Nenhum registro encontrado!",
    "pesquina_nao_permitida" : "Para pesquisar selecione: ou a data ou número ou um cliente!",
-   "gravacao_nao_permitida" : "Informe: a data, o cliente e ao menos um lanche!"
+   "gravacao_nao_permitida" : "Informe: a data, o cliente e ao menos um lanche!",
+   "salvo_com_sucesso" : "Pedido criado com sucesso! Redirecionando...",
+   "erro_interno" : "Houve algum erro interno!"
  }

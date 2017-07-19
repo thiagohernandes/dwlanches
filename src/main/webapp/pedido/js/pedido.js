@@ -271,13 +271,11 @@
             
         	edicaoPedidoService.erros = [];
         	
-            if(utilService.isNullOrUndefined(pedido.cliente)){
-            	edicaoPedidoService.erros.push(mensagens.informe_o_cliente);            	
+            if(utilService.isNullOrUndefined(pedido.cliente)
+            		|| utilService.isNullOrUndefined(pedido.datapedido)
+            		){
+            	edicaoPedidoService.erros.push(mensagens.gravacao_nao_permitida);            	
             }
-            if(utilService.isNullOrUndefined(pedido.datapedido)){
-            	edicaoPedidoService.erros.push(mensagens.informe_a_data_pedido);
-            }
-            
             if (edicaoPedidoService.erros.length !== 0) {
                 resultado.reject(edicaoPedidoService.erros);
                 return false;
@@ -285,12 +283,23 @@
             return true;
         }
         
-        function montarDados(pedido) { 
-        	var dados = {};
+        function montarDados(pedido) {  debugger
+        	var dados = {
+        			cliente : {},
+        			pedido : {},
+        			vltotal : 0.00
+        	};
         	dados.cliente.id = pedido.cliente.id;
-        	dados.pedido.data = moment(pedido.datapedido).format('DD/MM/YYYY');
-        	dados.vltotal = pedido.vltotal;
-        	
+        	if(pedido.datapedido instanceof Date === true){
+        		dados.pedido.data = conversorData.string(pedido.datapedido);
+        	} else {
+        	dados.pedido.data = pedido.datapedido;
+        	}
+        	dados.pedido.vltotal = pedido.vltotal;
+        	if(!utilService.isNullOrUndefined(pedido.numeropedido)){
+        	dados.pedido.numeropedido = pedido.numeropedido;
+        	}
+        	/*
         	dados.lanches.id = [];        	
         	for(var i = 0; i < pedido.listaLanchesSelecionados.length; i++){
         		dados.lanches.id.push(pedido.listaLanchesSelecionados.id); 
@@ -299,12 +308,12 @@
         	dados.ingredientes = [];
         	for(var i = 0; i < pedido.listaIngredientesSelecionados.length; i++){
         		dados.ingredientes.id.push(pedido.listaIngredientesSelecionados.id); 
-        	}
+        	} */
             return dados;
         }
 
-        function atualizar(pedido, resultado) { 
-            $http.put('/dw-lanches/rest/pedidos/alterar/' + pedido.id, montarDados(pedido)).then(function (response) {
+        function atualizar(pedido, resultado) { debugger
+            $http.put('/dw-lanches/rest/pedidos/alterar', montarDados(pedido)).then(function (response) {
                 resultado.resolve(pedido);
             }, function (response) {
             	alert("Houve algum problema!");
@@ -325,7 +334,7 @@
 
         edicaoPedidoService.carregar = function (id) { 
             var resultado = $q.defer();
-            $http.get('/dw-lanches/rest/pedidos/id/' + id).then(function (response) {
+            $http.get('/dw-lanches/rest/pedidos/id/' + id).then(function (response) { debugger
                 resultado.resolve(response.data);
             }, function (response) {
             	alert("Houve algum problema!");
@@ -337,12 +346,12 @@
         edicaoPedidoService.salvar = function (pedido,alterando) { 
             var resultado = $q.defer();
             if (validar(pedido, resultado)) {
-                if (pedido === true) {
+                if (alterando === true) {
                     atualizar(pedido, resultado);
                 } else {                	
                     criar(pedido, resultado);
                 }
-                edicaoPedidoService.resultadoPesquisa = [];
+                pesquisaPedidoService.resultadoPesquisa = [];
             }
             return resultado.promise;
         };
@@ -403,9 +412,13 @@
     	$scope.mensagens = mensagens;
     	$scope.edicaoPedidoService = edicaoPedidoService;
     	
+    	$scope.datepickersAbertos = {
+                datapedido : false
+         }; 
+    	
     	$scope.carregarCombos = function(){
-            $scope.pesquisaPedidoService.carregarComboClientes();
-            $scope.pesquisaPedidoService.carregarComboLanches();
+            $scope.edicaoPedidoService.carregarComboClientes();
+            $scope.edicaoPedidoService.carregarComboLanches();
     	};
     	
     	 $scope.inicializarAtributos = function(){
@@ -418,17 +431,17 @@
                  };
          };
 
-    	if ($routeParams.id) { 
+    	if ($routeParams.id) {  
     		$scope.inicializarAtributos();
     		$scope.carregarCombos();
-    		edicaoPedidoService.carregar($routeParams.id).then(function (pedido) { 
-                $scope.pedido.datapedido = pedido[0].datapedido;
-                $scope.pedido.vltotal = pedido[0].vltotal;
-                $scope.pedido.numeropedido = pedido[0].numeropedido;
+    		edicaoPedidoService.carregar($routeParams.id).then(function (pedido) { debugger
+                $scope.pedido.datapedido = pedido.dataFormatada;
+                $scope.pedido.vltotal = pedido.valorTotal;
+                $scope.pedido.numeropedido = pedido.id;
     		
     		 var indexCliente = -1;
 	         for(var i = 0, len = $scope.edicaoPedidoService.listaClientes.length; i < len; i++) {
-	        	if ($scope.edicaoPedidoService.listaClientes[i].cliente === pedido[0].cliente) {
+	        	if ($scope.edicaoPedidoService.listaClientes[i].id === pedido.cliente.id) { 
 	        		indexCliente = i;
 	        	  break;
 	        	}
@@ -439,7 +452,7 @@
             }, function (erros) {
                 $scope.edicaoPedidoService.erros = erros;
             });
-        } else {
+        } else { 
         	$scope.inicializarAtributos();
             $scope.edicaoPedidoService.erros = [];
             $scope.salvoComSucesso = false;
@@ -455,7 +468,7 @@
                 	window.location.href = "#/consultar";
                 	}, 2000);
             }, function (erros) {
-                $scope.edicaoPedidoService.erros = erros;
+                $scope.edicaoPedidoService.erros.push(mensagens.erro_interno)
                 $scope.salvoComSucesso = false;
             });
         };

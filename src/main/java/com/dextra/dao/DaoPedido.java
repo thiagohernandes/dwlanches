@@ -48,7 +48,7 @@ public class DaoPedido {
 		Cliente cliente = daoCliente.clienteId(Integer.parseInt(valoresCliente[0]));
 			
 		// lanches
-		List<Object> objLanche = (List<Object>) pedido.get("lanches"); 
+	/*	List<Object> objLanche = (List<Object>) pedido.get("lanches"); 
 		List<Lanche> lanchesPedido = new ArrayList<>(); 
 		for(int z = 0; z < objLanche.size(); z++) {			
 			Object oLanche = objLanche.get(z);		
@@ -68,7 +68,7 @@ public class DaoPedido {
 				lanchesPedido.add(daoLanche.lancheId(auxCodigoLanche,ingredientesPersonalizados));
 			}
 		}
-		
+		*/
 		// pedido
 		Object objPedido = pedido.get("pedido");			
 		String[] valoresPedido = util.formataValoresObjeto(objPedido);			
@@ -78,7 +78,8 @@ public class DaoPedido {
 		Pedido novoPedido = new Pedido(pedidos.size()+1,
 					   util.formataStringToDate(valoresPedido[0]),
 					   cliente,
-					   lanchesPedido,
+					   //lanchesPedido,
+					   null,
 					   Double.parseDouble(valoresPedido[1]));
 		pedidos.add(novoPedido);
 		// alteração
@@ -88,7 +89,8 @@ public class DaoPedido {
 			Pedido novoPedido = new Pedido(numeroPedido,
 					   util.formataStringToDate(valoresPedido[0]),
 					   cliente,
-					   lanchesPedido,
+					   //lanchesPedido,
+					   null,
 					   Double.parseDouble(valoresPedido[1]));
 			pedidos.add(novoPedido);
 		}

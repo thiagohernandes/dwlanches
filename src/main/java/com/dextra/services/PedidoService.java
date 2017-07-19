@@ -1,5 +1,6 @@
 package com.dextra.services;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,7 +63,7 @@ public class PedidoService {
 	 * @since 18-07-2017
 	 * */
 	@POST
-	@Path("/inserir")
+	@Path("/novo")
 	public void inserir(Map<String,Object> pedido){
 		dao.gravar(pedido,1);
 	}
