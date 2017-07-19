@@ -1,6 +1,5 @@
 package com.dextra.services;
 
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -120,6 +119,17 @@ public class PedidoService {
 		parametros.put("datapedido", datapedido);
 		parametros.put("lancheid", lancheid);
 		return dao.pesquisar(parametros);			
+	}
+	/**
+	 * Retornar o valor total de um lanche 
+	 * @author Thiago Hernandes de Souza
+	 * @since 19-07-2017
+	 * @return valor do lanche
+	 * */
+	@GET
+	@Path("/lanche/{id}")
+	public Lanche valorTotalLanche(@PathParam("id") int id){		
+		return dao.lancheValor(id);
 	}
 	
 }

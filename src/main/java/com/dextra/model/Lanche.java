@@ -12,6 +12,7 @@ public class Lanche {
 	private int id;
 	private String nome;
 	private List<Ingrediente> ingredientes;
+	private double valorTotal;
 	
 	public Lanche(){
 		
@@ -20,6 +21,11 @@ public class Lanche {
 		this.id = id;
 		this.nome = nome;
 	}	
+	public Lanche(int id, String nome, double valorTotal){
+		this.id = id;
+		this.nome = nome;
+		this.valorTotal = valorTotal;
+	}
 	public Lanche(int id, String nome, List<Ingrediente> ingredientes){
 		this.id = id;
 		this.nome = nome;
@@ -42,6 +48,12 @@ public class Lanche {
 	}
 	public void setIngredientes(List<Ingrediente> ingredientes) {
 		this.ingredientes = ingredientes;
+	}
+	public double getValorTotal() {
+		return valorTotal;
+	}
+	public void setValorTotal(double valorTotal) {
+		this.valorTotal = valorTotal;
 	}
 	
 

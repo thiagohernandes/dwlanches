@@ -67,6 +67,57 @@
         </div>
         
         <div class="row">
+        	<fieldset class="form-group col-md-3">
+                    <label for="filtro-cliente">Lanche:</label>
+                    <p class="input-group input-group-sm">
+                     <select style="width : 250px" ng-model="pedido.lanche"
+                      class="form-control"
+ 				      ng-options="item.nome for item in edicaoPedidoService.listaLanches">
+ 				    	<option value="">Selecione um lanche</option>
+					</select>
+					</p>
+                </fieldset>
+        </div> 
+        <div class="row">        
+            <fieldset class="form-group col-md-2">
+                <button class="btn btn-info" type="button" 
+                ng-click="adicionarLanche(pedido.lanche.id)">Adicionar Lanche</button>
+            </fieldset>
+        </div>
+        
+         <div class="row">
+         <fieldset class="form-group col-md-6">
+            <table class="table table-condensed" ng-if="pedido.listaLanchesSelecionados.length > 0">
+            <thead>
+                <tr class="borda-esquerda-tabela borda-direita-tabela">
+                    <th class="text-center">Lanche</th>
+                    <th class="text-center borda-direita-tabela">Valor</th>                 
+                    <th class="text-center borda-direita-tabela">Ações</th>           
+                </tr>
+            </thead>
+
+            <tbody ng-repeat="item in pedido.listaLanchesSelecionados">
+                <tr class="text-center borda-inferior-tabela borda-esquerda-tabela borda-direita-tabela"
+                 ng-class="{success: $first}">
+                    <td align="left">{{item.nome}}</td>
+                    <td align="right">R$ {{item.valorTotal}}</td>
+                    <td>
+                     <a id="btn-excluir" class="btn btn-danger" type="button"
+                     ng-click="">                     
+                        		<i class="glyphicon glyphicon-remove"></i></a>
+                    </td>                
+                </tr>
+            </tbody>
+        	</table>
+          </fieldset>
+        </div>
+        <div class="row">
+         <fieldset class="form-group col-md-6">
+         <h4>Valor total -> R$ {{pedido.vltotal}}</h4>
+         </fieldset>
+         </div>
+        
+        <div class="row">
 	    	<hr/>
 		</div>
     </form>

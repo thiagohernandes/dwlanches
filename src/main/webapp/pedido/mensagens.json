@@ -5,5 +5,15 @@
    "pesquina_nao_permitida" : "Para pesquisar selecione: ou a data ou número ou um cliente!",
    "gravacao_nao_permitida" : "Informe: a data, o cliente e ao menos um lanche!",
    "salvo_com_sucesso" : "Pedido criado com sucesso! Redirecionando...",
-   "erro_interno" : "Houve algum erro interno!"
+   "erro_interno" : "Houve algum erro interno!",
+   "erro_carregar_lanches" : "Houve algum erro ao carregar os lanches!",
+   "erro_carregar_clientes" : "Houve algum erro ao carregar os clientes!",
+   "erro_carregar_ingredientes" : "Houve algum erro ao carregar os ingredientes",
+   "erro_ao_excluir" : "Erro ao excluir o pedido!",
+   "erro_ao_atualizar" : "Erro ao atualizar o pedido!",
+   "erro_ao_criar" : "Erro ao criar o pedido!",
+   "erro_ao_carregar" : "Erro ao carregar o pedido!",
+   "erro_ao_salvar" : "Erro ao salvar o pedido!",
+   "erro_ao_consultar_valor_lanche" : "Erro ao consultar o valor do lanche!",
+   "erro_ao_adicionar_lanche" : "Erro ao adicionar lanche!"
  }
