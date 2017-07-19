@@ -36,8 +36,9 @@ public class DaoPedido {
 	 * Método de inserção de um pedido
 	 * @author Thiago Hernandes de Souza
 	 * @since 17-07-2017
+	 * @param dados do pedido e flag (1 = inserção e 2 = alteração)
 	 * */
-	public void inserir(Map<String,Object> pedido){
+	public void gravar(Map<String,Object> pedido, int flag){
 		// caso de lanche personalizado
 		List<Ingrediente> ingredientesPersonalizados = new ArrayList<>();
 		
@@ -70,13 +71,27 @@ public class DaoPedido {
 		
 		// pedido
 		Object objPedido = pedido.get("pedido");			
-		String[] valoresPedido = util.formataValoresObjeto(objPedido);				
+		String[] valoresPedido = util.formataValoresObjeto(objPedido);			
+		
+		// inserção
+		if(flag == 1) {
 		Pedido novoPedido = new Pedido(pedidos.size()+1,
 					   util.formataStringToDate(valoresPedido[0]),
 					   cliente,
 					   lanchesPedido,
 					   Double.parseDouble(valoresPedido[1]));
 		pedidos.add(novoPedido);
+		// alteração
+		} else {
+			int numeroPedido = Integer.parseInt(valoresPedido[2]); 
+			excluir(numeroPedido);
+			Pedido novoPedido = new Pedido(numeroPedido,
+					   util.formataStringToDate(valoresPedido[0]),
+					   cliente,
+					   lanchesPedido,
+					   Double.parseDouble(valoresPedido[1]));
+			pedidos.add(novoPedido);
+		}
 	}
 	
 	/**
@@ -94,15 +109,36 @@ public class DaoPedido {
 	}
 	
 	/**
+	 * Método de carregamento de um pedido
+	 * @author Thiago Hernandes de Souza
+	 * @since 18-07-2017
+	 * */
+	public Pedido carregar(int id){
+		Pedido retorno = new Pedido();
+		for(int i = 0; i < pedidos.size(); i++){
+			if(pedidos.get(i).getId() == id){
+				retorno = pedidos.get(i);
+				break;
+			}
+		}
+		return retorno;
+	}
+	
+	/**
 	 * Método de pesquisa de pedidos
 	 * @author Thiago Hernandes de Souza
 	 * @since 18-07-2017
 	 * */
 	public List<Pedido> pesquisar(Map<String,String> parametros){
 		List<Pedido> pesquisa = new ArrayList();
-		
+		// retornar todos
+		if(parametros.get("numeropedido") == null && parametros.get("datapedido") == null &&
+				parametros.get("clienteid") == null && parametros.get("lancheid") == null
+				){
+			pesquisa = pedidos;
+		} else {
 		// enviou o número do pedido
-		if(!parametros.get("numeropedido").isEmpty()){
+		if(parametros.get("numeropedido") != null){
 			for(int i = 0; i < pedidos.size(); i++){
 				if(pedidos.get(i).getId() == Integer.parseInt(parametros.get("numeropedido").toString())){
 					pesquisa.add(pedidos.get(i));
@@ -111,35 +147,57 @@ public class DaoPedido {
 			}
 		} else {
 			// enviou a data do pedido
-			if(!parametros.get("datapedido").isEmpty()){
+			if(parametros.get("datapedido") != null){
 				for(int i = 0; i < pedidos.size(); i++){
-					if(pedidos.get(i).getData() == util.formataStringToDate(parametros.get("datapedido").toString())){
-						pesquisa.add(pedidos.get(i)); 
+					if(pedidos.get(i).getData().equals(util.formataStringToDate(parametros.get("datapedido").toString()))){
+						if(verificarObjeto(pedidos.get(i),pesquisa) == false){
+							pesquisa.add(pedidos.get(i)); 	
+						}						
 					}
 				}
 			}
 			// enviou o cliente do pedido
-			if(!parametros.get("clienteid").isEmpty()){
+			if(parametros.get("clienteid") != null){
 				for(int i = 0; i < pedidos.size(); i++){
 					if(pedidos.get(i).getCliente().getId() == Integer.parseInt(parametros.get("clienteid").toString())){
-						pesquisa.add(pedidos.get(i)); 
+						if(verificarObjeto(pedidos.get(i),pesquisa) == false){
+							pesquisa.add(pedidos.get(i)); 	
+						} 
 					}
 				}
 			}
 			// enviou o lanche do pedido
-			if(!parametros.get("lancheid").isEmpty()){
+			if(parametros.get("lancheid") != null){
 				for(int i = 0; i < pedidos.size(); i++){
 					for(int l = 0; l < pedidos.get(i).getLanches().size(); l++){
 						if(pedidos.get(i).getLanches().get(l).getId() == 
 								Integer.parseInt(parametros.get("lancheid").toString())){
-							pesquisa.add(pedidos.get(i)); 
+							if(verificarObjeto(pedidos.get(i),pesquisa) == false){
+								pesquisa.add(pedidos.get(i)); 	
+							} 
 						}
 					}
 				}
 			}
 		}
-		
+		}
 		return pesquisa;
+	}
+	
+	/**
+	 * Método de verificação de objeto inserido
+	 * @author Thiago Hernandes de Souza
+	 * @since 19-07-2017
+	 * */
+	private boolean verificarObjeto(Pedido pedido,List<Pedido> lista){
+		boolean r = false;
+		for(int x = 0; x < lista.size(); x++){
+			if(lista.get(x).getId() == pedido.getId()){
+				r = true;
+				break;
+			}
+		}
+		return r;
 	}
 
 }

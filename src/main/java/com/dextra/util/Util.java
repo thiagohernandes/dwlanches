@@ -53,5 +53,18 @@ public class Util {
 		LocalDate dataFormatada = LocalDate.parse(data,formatter);
 		 return dataFormatada;
 	}	
+	
+	/**
+	 * Formata data dia/mês/ano
+	 * @author Thiago Hernandes de Souza
+	 * @since 19-06-2017
+	 * @param LocalDate
+	 * @return data formatada
+	 * */
+	public String formataDataDMA(LocalDate data){
+		DateTimeFormatter formatters = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		String dataFormatada = data.format(formatters);
+		return dataFormatada;
+	}
 
 }

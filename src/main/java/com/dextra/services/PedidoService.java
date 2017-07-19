@@ -8,6 +8,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -50,7 +51,18 @@ public class PedidoService {
 	@POST
 	@Path("/inserir")
 	public void inserir(Map<String,Object> pedido){
-		dao.inserir(pedido);
+		dao.gravar(pedido,1);
+	}
+	
+	/**
+	 * Alterar um pedido
+	 * @author Thiago Hernandes de Souza
+	 * @since 18-07-2017
+	 * */
+	@PUT
+	@Path("/alterar")
+	public void alterar(Map<String,Object> pedido){
+		dao.gravar(pedido,2);
 	}
 	
 	/**
@@ -60,8 +72,19 @@ public class PedidoService {
 	 * */
 	@DELETE
 	@Path("/excluir/{id}")
-	public void excluir(@PathParam("codigo") int id){
+	public void excluir(@PathParam("id") int id){
 		dao.excluir(id);
+	}
+	
+	/**
+	 * Carregar um pedido
+	 * @author Thiago Hernandes de Souza
+	 * @since 19-07-2017
+	 * */
+	@GET
+	@Path("/id/{id}")
+	public Pedido carregar(@PathParam("id") int id){
+		return dao.carregar(id);
 	}
 	
 	/**

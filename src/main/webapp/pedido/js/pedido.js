@@ -64,11 +64,11 @@
         	});
         };
         
-        $scope.somenteNumeros = /^\d+$/;
         $scope.mensagens = mensagens;
         $scope.datepickersAbertos = {
                 datapedido : false
          };   
+        
         $scope.pesquisaPedidoService.carregarComboClientes();
         $scope.pesquisaPedidoService.carregarComboLanches();
         
@@ -99,11 +99,12 @@
             excluiu : false
         };       
         
-        function montarFiltrosPesquisa() {
-            var dataPedido = pesquisaPedidoService.filtros.datapedido;
-            var params = {
-            		datapedido: conversorData.string(dataPedido)
-            };
+        function montarFiltrosPesquisa() { 
+        	var params = {};
+        	if(pesquisaPedidoService.filtros.datapedido){
+        		var dataPedido = pesquisaPedidoService.filtros.datapedido;
+            	params.datapedido = conversorData.string(dataPedido);
+            }
             if (pesquisaPedidoService.filtros.cliente) {
             	params.clienteid = pesquisaPedidoService.filtros.cliente.id;
             }
@@ -130,7 +131,7 @@
         	        controller: 'ModalInstanceConfirmacaoCtrl',
         	        controllerAs : '$ctrl',
         	        size: 'sm'
-        	    	}).result.then(function(result) {
+        	    	}).result.then(function(result) { debugger
         				if(result){ 
         					excluir(codigo);	
         				}
@@ -139,7 +140,7 @@
         
         function excluir(codigo) {              
                 	var resultado = $q.defer();
-                    $http.delete('/dw-lanches/rest/pedidos/excluir/' + codigo).then(function (response) {
+                    $http.delete('/dw-lanches/rest/pedidos/excluir/' + codigo).then(function (response) { debugger
                     	pesquisaPedidoService.limpar(); 
                     	pesquisaPedidoService.excluiu = true;
                         resultado.resolve(pedido);                
@@ -152,7 +153,7 @@
         	pesquisaPedidoService.excluiu = false;
         	pesquisaPedidoService.resultadoPesquisa = [];
         	pesquisaPedidoService.erros = [];
-                $http.get('/dw-dextra/rest/pedidos/pesquisar/',{params : montarFiltrosPesquisa()}).then(
+                $http.get('/dw-lanches/rest/pedidos/pesquisar/',{params : montarFiltrosPesquisa()}).then(
                     function (response) { 
                     	pesquisaPedidoService.resultadoPesquisa = response.data;
                     	pesquisaPedidoService.nenhumRegistroEncontrado =
@@ -236,12 +237,12 @@
         	dados.vltotal = pedido.vltotal;
         	
         	dados.lanches.id = [];        	
-        	for(var i = 0; i < pedido.listaLanchesSelecionados; i++){
+        	for(var i = 0; i < pedido.listaLanchesSelecionados.length; i++){
         		dados.lanches.id.push(pedido.listaLanchesSelecionados.id); 
         	}
         	
         	dados.ingredientes = [];
-        	for(var i = 0; i < pedido.listaIngredientesSelecionados; i++){
+        	for(var i = 0; i < pedido.listaIngredientesSelecionados.length; i++){
         		dados.ingredientes.id.push(pedido.listaIngredientesSelecionados.id); 
         	}
             return dados;
@@ -368,6 +369,7 @@
     		edicaoPedidoService.carregar($routeParams.id).then(function (pedido) { 
                 $scope.pedido.datapedido = pedido[0].datapedido;
                 $scope.pedido.vltotal = pedido[0].vltotal;
+                $scope.pedido.numeropedido = pedido[0].numeropedido;
     		
     		 var indexCliente = -1;
 	         for(var i = 0, len = $scope.edicaoPedidoService.listaClientes.length; i < len; i++) {
@@ -376,8 +378,7 @@
 	        	  break;
 	        	}
 	         }               	
-             $scope.pedido.cliente = $scope.edicaoPedidoService.listaClientes[indexCliente]; 
-                           			   			
+             $scope.pedido.cliente = $scope.edicaoPedidoService.listaClientes[indexCliente];                            			   			
              $scope.alterando = true;
              
             }, function (erros) {
@@ -431,8 +432,8 @@
      * Controller da modal de confirmação de exclusão
      * */
     pedido.controller('ModalInstanceConfirmacaoCtrl',
-			['$uibModalInstance','$scope',
-            function ($uibModalInstance,$scope) { 
+											['$uibModalInstance','$scope',
+											function ($uibModalInstance,$scope) { 
 		var $ctrl = this;   	  
 		$ctrl.ok = function () {    		
 		$uibModalInstance.close(true);

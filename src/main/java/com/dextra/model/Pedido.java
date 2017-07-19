@@ -3,6 +3,8 @@ package com.dextra.model;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.dextra.util.Util;
+
 /**
  * Model Pedido
  * @author Thiago Hernandes de Souza
@@ -15,6 +17,9 @@ public class Pedido {
 	private Cliente cliente;
 	private List<Lanche> lanches;
 	private double valorTotal;
+	private String dataFormatada;
+	
+	private Util util = new Util();
 	
 	public Pedido(){
 	}
@@ -56,5 +61,9 @@ public class Pedido {
 	}
 	public void setValorTotal(double valorTotal) {
 		this.valorTotal = valorTotal;
+	}
+	public String getDataFormatada() {
+		dataFormatada = util.formataDataDMA(this.data);
+		return dataFormatada;
 	}
 }

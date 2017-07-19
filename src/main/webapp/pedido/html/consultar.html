@@ -116,7 +116,7 @@
                 <tr class="text-center borda-inferior-tabela borda-esquerda-tabela borda-direita-tabela"
                  ng-class="{success: $first}">
                     <td align="right">{{item.id}}</td>
-                    <td align="center">{{item.data | date :  'dd.MM.yyy' }}</td>
+                    <td align="center">{{item.dataFormatada}}</td>
                     <td align="left">{{item.cliente.id}}-{{item.cliente.nome}}</td>
                     <td>
                      <a id="btn-criar-cliente" class="btn btn-warning" type="button" href="#/editar/{{item.id}}">                     
