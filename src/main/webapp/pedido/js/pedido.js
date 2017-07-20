@@ -310,7 +310,8 @@
         	for(var i = 0; i < pedido.listaLanchesSelecionados.length; i++){
         		dados.lanches.push(pedido.listaLanchesSelecionados[i].id+"-"+
         						   pedido.listaLanchesSelecionados[i].valorTotal+"-"+
-        						   pedido.listaLanchesSelecionados[i].qtd); 
+        						   pedido.listaLanchesSelecionados[i].qtd+"-"+
+        						   pedido.listaLanchesSelecionados[i].nome); 
         	}
         
             return dados;
@@ -488,36 +489,57 @@
         	return retorno;
         };
     	
-    	$scope.adicionarLanche = function(idLanche){ 
+    	$scope.adicionarLanche = function(idLanche){ debugger
     		if(!utilService.isNullOrUndefined(idLanche) &&
     				!utilService.isNullOrUndefined($scope.pedido.qtd)) {
-    		if(verificarLancheInserido(idLanche) == true){	
-    		$http.get('/dw-lanches/rest/pedidos/lanche/'+idLanche).then(
-                    function (response) {
-                      $scope.edicaoPedidoService.erros = [];
-                       var lanche = {}; 
-                       lanche = response.data;
-                       lanche.qtd = $scope.pedido.qtd;
-                       // com promoção
-                       if(!utilService.isNullOrUndefined($scope.pedido.promocao)){
-                    	   $scope.pedido.vltotal+= 
-           	   				(response.data.valorTotal -
-           		   			((response.data.valorTotal*$scope.pedido.promocao.desconto)/100))*$scope.pedido.qtd;
-                    	   lanche.valorTotal = (response.data.valorTotal -
-                  		   			((response.data.valorTotal*$scope.pedido.promocao.desconto)/100));                    	   
-                    	   $scope.pedido.listaLanchesSelecionados.push(lanche);
-                       } else { 
-                    	   // sem promoção
-                    	   lanche.valorTotal = lanche.valorTotal;
-                    	   $scope.pedido.listaLanchesSelecionados.push(lanche);
-                    	   $scope.pedido.vltotal+=response.data.valorTotal*$scope.pedido.qtd; 
-                       }
-                    },
-                    function (response) {
-                            window.console.log(response);
-                            window.alert(mensagens.erro_ao_consultar_valor_lanche);
+    		if(verificarLancheInserido(idLanche) == true){
+    			if(idLanche > 4) {
+    				var lanche = $scope.pedido.lanche;
+    				lanche.qtd = $scope.pedido.qtd;
+    				 // com promoção
+                    if(!utilService.isNullOrUndefined($scope.pedido.promocao)){
+                 	   $scope.pedido.vltotal+= 
+        	   				(lanche.valorTotal -
+        		   			((lanche.valorTotal*$scope.pedido.promocao.desconto)/100))*$scope.pedido.qtd;
+                 	   lanche.valorTotal = (lanche.valorTotal -
+               		   			((lanche.valorTotal*$scope.pedido.promocao.desconto)/100));                    	   
+                 	   $scope.pedido.listaLanchesSelecionados.push(lanche);
+                    } else { 
+                 	   // sem promoção
+                 	   lanche.valorTotal = lanche.valorTotal;
+                 	   $scope.pedido.listaLanchesSelecionados.push(lanche);
+                 	   $scope.pedido.vltotal+=lanche.valorTotal*$scope.pedido.qtd; 
                     }
-                ); 
+    			} else {
+    				$http.get('/dw-lanches/rest/pedidos/lanche/'+idLanche).then(
+    	                    function (response) {
+    	                      $scope.edicaoPedidoService.erros = [];
+    	                       var lanche = {}; 
+    	                       lanche = response.data;
+    	                       lanche.qtd = $scope.pedido.qtd;
+    	                       // com promoção
+    	                       if(!utilService.isNullOrUndefined($scope.pedido.promocao)){
+    	                    	   $scope.pedido.vltotal+= 
+    	           	   				(response.data.valorTotal -
+    	           		   			((response.data.valorTotal*$scope.pedido.promocao.desconto)/100))*$scope.pedido.qtd;
+    	                    	   lanche.valorTotal = (response.data.valorTotal -
+    	                  		   			((response.data.valorTotal*$scope.pedido.promocao.desconto)/100));                    	   
+    	                    	   $scope.pedido.listaLanchesSelecionados.push(lanche);
+    	                       } else { 
+    	                    	   // sem promoção
+    	                    	   lanche.valorTotal = lanche.valorTotal;
+    	                    	   $scope.pedido.listaLanchesSelecionados.push(lanche);
+    	                    	   $scope.pedido.vltotal+=response.data.valorTotal*$scope.pedido.qtd; 
+    	                       }
+    	                    },
+    	                    function (response) {
+    	                            window.console.log(response);
+    	                            window.alert(mensagens.erro_ao_consultar_valor_lanche);
+    	                    }
+    	                ); 
+    			}
+    			
+    		
     		} else {
     			$scope.edicaoPedidoService.erros.push(mensagens.lanche_ja_adicionado);
     		}
@@ -627,11 +649,11 @@
         function validar(personalizado, resultado) {
         	personalizadoService.erros = [];        	
             if(utilService.isNullOrUndefined(personalizado.nome)
-            		|| personalizado.listaIngredientessSelecionados.length < 1
+            		|| personalizado.listaIngredientesSelecionados.length < 1
             		){
             	personalizadoService.erros.push(mensagens.criacao_lanche_nao_permitida);            	
             }
-            if (edicaoPedidoService.erros.length !== 0) {
+            if (personalizadoService.erros.length !== 0) {
                 resultado.reject(personalizadoService.erros);
                 return false;
             }
@@ -640,17 +662,19 @@
         
         function montarDados(personalizado) {  
         	var dados = {
-        			nome : {},
+        			lanche : {},
         			ingredientes : []
         	};
-        	dados.nome = personalizado.nome;
+        	dados.lanche.nome = personalizado.nome;
+        	dados.lanche.vltotal = personalizado.vltotal;
         	for(var i = 0; i < personalizado.listaIngredientesSelecionados.length; i++){
-        		dados.ingredientes.push(pedido.listaIngredientesSelecionados[i].id); 
+        		dados.ingredientes.push(personalizado.listaIngredientesSelecionados[i].id); 
         	}
             return dados;
         }
 
-        function criar(personalizado, resultado) {        	
+        function criar(personalizado, resultado) {   
+        	if(validar(personalizado,resultado)){
             $http.post('/dw-lanches/rest/lanches/novo', montarDados(personalizado)).then(function (response) {
                 resultado.resolve(response.data);
             }, function (response) {
@@ -658,6 +682,7 @@
                 window.alert(mensagens.erro_ao_criar_lanche);
                 resultado.reject(response.data);
             });
+            }
         };
 
         personalizadoService.salvar = function (personalizado) { 
@@ -670,7 +695,7 @@
         
         personalizadoService.carregarComboIngredientes = function() {                  		
             $http.get('/dw-lanches/rest/ingredientes/todos').then(function (response) {            	
-            	edicaoPedidoService.listaClientes = response.data;            	
+            	personalizadoService.listaIngredientes = response.data;            	
             }, function (response) {
             	window.console.log(response);
                 window.alert(mensagens.erro_carregar_clientes);
@@ -717,7 +742,6 @@
          };
         
         $scope.inicializarAtributos();
-        $scope.personalizadoService.erros = [];
         $scope.salvoComSucesso = false;
         $scope.carregarCombo();
         
@@ -737,7 +761,7 @@
     				!utilService.isNullOrUndefined($scope.personalizado.nome)) {
 	    		if(verificarIngredienteInserido(id) == true){	
 	    		$http.get('/dw-lanches/rest/ingredientes/carregar/'+id).then(
-	                    function (response) {
+	                    function (response) { 
 	                      $scope.personalizadoService.erros = [];
 	                       var ingrediente = {}; 
 	                       ingrediente = response.data;
@@ -759,7 +783,6 @@
 
         $scope.salvar = function () { 
         	personalizadoService.salvar($scope.personalizado).then(function (resultado) {                
-                $scope.personalizadoService.erros = [];
                 $scope.salvoComSucesso = true;
                 setTimeout(function(){ 
                 	window.location.href = "#/consultar";

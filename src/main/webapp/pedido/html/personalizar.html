@@ -6,12 +6,12 @@
 	</div>
     
     <form id="form-atendimento">
-        <div class="row" ng-if="personalizarService.erros && personalizarService.erros.length !== 0">
+        <div class="row" ng-if="personalizadoService.erros && personalizadoService.erros.length !== 0">
             <div class="col-md-12">
                 <div class="alert alert-danger">
                     <strong>{{ mensagens.informacao_pesquisa }}</strong>
                     <ul>
-                        <li ng-repeat="mensagem in personalizarService.erros">{{ mensagem }}</li>
+                        <li ng-repeat="mensagem in personalizadoService.erros">{{ mensagem }}</li>
                     </ul>
                 </div>
             </div>
@@ -33,28 +33,41 @@
 	                		ng-model="personalizado.nome"/>	               
             		</p>
             </fieldset>
-            <fieldset class="form-group col-md-3">
-                    <label for="edicao-ingrediente">Ingrediente:</label>
-                    <p class="input-group input-group-sm">
-                     <select style="width : 250px" ng-model="personalizado.ingrediente"
-                      class="form-control" 
- 				      ng-options="item.nome for item in personalizarService.listaIngredientes">
- 				    	<option value="">Selecione o ingrediente</option>
-					</select>
-					</p>
-            </fieldset>
         </div> 
+        
+        <div class="row">
+            <div class="col-md-6">
+                <button class="btn btn-primary" type="button" 
+                ng-click="salvar()">Salvar</button>
+                <button class="btn btn-default" type="button" 
+                ng-click="cancelar()">Cancelar/Voltar</button>
+            </div>
+        </div>
          
          <div class="row">
 	         <fieldset class="form-group col-md-6">
 	         <h4>Valor total -> R$ {{personalizado.vltotal | number : 2}}</h4>
 	         </fieldset>
          </div>
-         
-        <div class="row">        
-            <fieldset class="form-group col-md-2">
+        
+        <div class="row">
+        	<fieldset class="form-group col-md-3">
+                    <label for="edicao-ingrediente">Ingrediente:</label>
+                    <p class="input-group input-group-sm">
+                     <select style="width : 250px" ng-model="personalizado.ingrediente"
+                      class="form-control" 
+ 				      ng-options="item.nome for item in personalizadoService.listaIngredientes">
+ 				    	<option value="">Selecione o ingrediente</option>
+					</select>
+					</p>
+        	</fieldset>        
+        </div>
+        <div class="row">
+         <fieldset class="form-group col-md-2">
+            	<p class="input-group input-group-sm">
                 <button class="btn btn-info" type="button" 
                 ng-click="adicionarIngrediente(personalizado.ingrediente.id)">Adicionar Ingrediente</button>
+                </p>
             </fieldset>
         </div>
         

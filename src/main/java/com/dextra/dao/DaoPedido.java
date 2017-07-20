@@ -53,9 +53,18 @@ public class DaoPedido {
 			
 			int auxCodigoLanche = Integer.parseInt(vLancheCodigoValor[0]);			
 			Lanche lancheAux = daoLanche.lancheId(auxCodigoLanche);
-			lancheAux.setValorTotal(Double.parseDouble(vLancheCodigoValor[1].toString()));
-			lancheAux.setQtd(Integer.parseInt(vLancheCodigoValor[2].toString()));
-			lanchesPedido.add(lancheAux);
+			if(lancheAux.getId() == 0){
+				lancheAux.setId(auxCodigoLanche);
+				lancheAux.setValorTotal(Double.parseDouble(vLancheCodigoValor[1].toString()));
+				lancheAux.setQtd(Integer.parseInt(vLancheCodigoValor[2].toString()));
+				lancheAux.setNome(vLancheCodigoValor[3].toString());
+				lanchesPedido.add(lancheAux);
+			} else {
+				lancheAux.setValorTotal(Double.parseDouble(vLancheCodigoValor[1].toString()));
+				lancheAux.setQtd(Integer.parseInt(vLancheCodigoValor[2].toString()));
+				lanchesPedido.add(lancheAux);
+			}
+			
 		}
 		
 		// pedido
@@ -111,15 +120,6 @@ public class DaoPedido {
 				break;
 			}
 		}
-		for(int s = 0; s < retorno.getLanches().size(); s++){
-			if(retorno.getLanches().get(s).getId() > 4){
-			double valor = 0;
-			for(int m = 0; m < retorno.getLanches().get(s).getIngredientes().size(); m++){
-				valor+=retorno.getLanches().get(s).getIngredientes().get(m).getValor();
-			}
-			retorno.getLanches().get(s).setValorTotal(valor);
-			} 
-		}		
 		return retorno;
 	}
 	
@@ -223,12 +223,13 @@ public class DaoPedido {
 	 * */
 	public Lanche lancheValor(int idLanche){
 		double valor = 0;
-		DaoLanche daoLanche = new DaoLanche();
 		Lanche lanche = daoLanche.lancheId(idLanche);
+		if(idLanche < 5){
 		for(int o = 0; o < lanche.getIngredientes().size(); o++){
 			valor+=lanche.getIngredientes().get(o).getValor();
 		}
 		lanche.setValorTotal(valor);
+		} 
 		return lanche;
 	}
 

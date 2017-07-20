@@ -1,9 +1,11 @@
 package com.dextra.services;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -34,5 +36,16 @@ public class LancheService {
 	@Path("/todos")	
 	public List<Lanche> todos() {		
 		return dao.todosLanches();
+	}
+	
+	/**
+	 * Criar um novo lanche
+	 * @author Thiago Hernandes de Souza
+	 * @since 20-06-2017
+	 * */
+	@POST
+	@Path("/novo")	
+	public void novo(Map<String,Object> lanche) {		
+		dao.novo(lanche);
 	}
 }

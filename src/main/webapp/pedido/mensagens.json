@@ -23,5 +23,5 @@
    "erro_ao_criar_lanche" : "Erro ao criar lanche personalizado!",
    "erro_ao_retornar_ingrediente" : "Erro ao retornar ingrediente!",
    "personalizado_com_sucesso" : "Personalização de lanche efetuada com sucesso! Redirecionando...",
-   
+   "ingrediente_ja_adicionado" : "Ingrediente já adicionado"   
  }

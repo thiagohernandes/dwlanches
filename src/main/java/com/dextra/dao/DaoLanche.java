@@ -2,9 +2,11 @@ package com.dextra.dao;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.dextra.model.Ingrediente;
 import com.dextra.model.Lanche;
+import com.dextra.util.Util;
 
 /**
  * DAO Lanche
@@ -14,6 +16,9 @@ import com.dextra.model.Lanche;
 public class DaoLanche extends DaoIngrediente {
 	
 	private List<Lanche> lanches = new ArrayList<>();
+	private Util util = new Util();
+	private DaoIngrediente daoIngrediente = new DaoIngrediente();
+	static int codigo = 4;
 	
 	public DaoLanche(){
 		// Inserção de lanches pré-definidos
@@ -92,6 +97,32 @@ public class DaoLanche extends DaoIngrediente {
 		}
 		retorno.setIngredientes(ingredientesLanche);
 		return retorno;
+	}
+	
+	/**
+	 * Método de criação de um novo lanche
+	 * @author Thiago Hernandes de Souza
+	 * @since 20-07-2017
+	 * */
+	public void novo(Map<String,Object> lanche){
+		// lanche
+		Object objLanche = lanche.get("lanche");			
+		String[] valoresLanche = util.formataValoresObjeto(objLanche);
+		
+		// ingredientes
+		List<Object> listaIngredientes = (List<Object>) lanche.get("ingredientes"); 
+		List<Ingrediente> ingredientesLanche = new ArrayList<>(); 
+		double valorTotal = 0;
+		for(int z = 0; z < listaIngredientes.size(); z++) {			
+			Object oIngrediente = listaIngredientes.get(z);		
+			String[] vId = util.formataValoresObjeto(oIngrediente);			
+			Ingrediente ingrediente = daoIngrediente.ingredienteId(Integer.parseInt(vId[0].toString()));
+			valorTotal+= ingrediente.getValor();
+			ingredientesLanche.add(ingrediente);
+		}
+		
+		codigo+=1;		
+		lanches.add(new Lanche(codigo,valoresLanche[0],ingredientesLanche,valorTotal));		
 	}
 
 }
