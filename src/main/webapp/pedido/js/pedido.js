@@ -271,13 +271,12 @@
                 erros : []
         };
         
-        function validar(pedido, resultado) {
+        function validar(pedido, resultado) { 
             
         	edicaoPedidoService.erros = [];        	
             if(utilService.isNullOrUndefined(pedido.cliente)
             		|| utilService.isNullOrUndefined(pedido.datapedido)
             		|| pedido.listaLanchesSelecionados.length < 1
-            		|| utilService.isNullOrUndefined(pedido.qtd)
             		){
             	edicaoPedidoService.erros.push(mensagens.gravacao_nao_permitida);            	
             }
@@ -489,7 +488,7 @@
         	return retorno;
         };
     	
-    	$scope.adicionarLanche = function(idLanche){ debugger
+    	$scope.adicionarLanche = function(idLanche){ 
     		if(!utilService.isNullOrUndefined(idLanche) &&
     				!utilService.isNullOrUndefined($scope.pedido.qtd)) {
     		if(verificarLancheInserido(idLanche) == true){
