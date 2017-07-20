@@ -54,9 +54,14 @@ public class DaoPedido {
 		for(int z = 0; z < objLanche.size(); z++) {			
 			Object oLanche = objLanche.get(z);		
 			String[] vLanche = util.formataValoresObjeto(oLanche);
-			int auxCodigoLanche = Integer.parseInt(vLanche[0]);			
+			String[] vLancheCodigoValor = vLanche[0].split("-");
+			
+			int auxCodigoLanche = Integer.parseInt(vLancheCodigoValor[0]);			
 			if(auxCodigoLanche < 5) {
-				lanchesPedido.add(daoLanche.lancheId(auxCodigoLanche));
+				Lanche lancheAux = daoLanche.lancheId(auxCodigoLanche);
+				lancheAux.setValorTotal(Double.parseDouble(vLancheCodigoValor[1].toString()));
+				lancheAux.setQtd(Integer.parseInt(vLancheCodigoValor[2].toString()));
+				lanchesPedido.add(lancheAux);
 			} else {
 				// ingredientes personalizados 
 					List<Object> objIngrPersonalizado = Arrays.asList(vLanche);
@@ -66,7 +71,10 @@ public class DaoPedido {
 						Ingrediente ingrediente = daoLanche.ingredienteId(Integer.parseInt(vIngrPersonalizado[0]));
 						ingredientesPersonalizados.add(ingrediente);
 					}
-				lanchesPedido.add(daoLanche.lancheId(auxCodigoLanche,ingredientesPersonalizados));
+					Lanche lancheAux = daoLanche.lancheId(auxCodigoLanche,ingredientesPersonalizados);
+					lancheAux.setValorTotal(Double.parseDouble(vLancheCodigoValor.toString()));
+					lancheAux.setQtd(Integer.parseInt(vLancheCodigoValor[2].toString()));
+					lanchesPedido.add(lancheAux);	
 			}
 		}
 		
@@ -124,13 +132,14 @@ public class DaoPedido {
 			}
 		}
 		for(int s = 0; s < retorno.getLanches().size(); s++){
+			if(retorno.getLanches().get(s).getId() > 4){
 			double valor = 0;
 			for(int m = 0; m < retorno.getLanches().get(s).getIngredientes().size(); m++){
 				valor+=retorno.getLanches().get(s).getIngredientes().get(m).getValor();
 			}
 			retorno.getLanches().get(s).setValorTotal(valor);
-		}
-		
+			} 
+		}		
 		return retorno;
 	}
 	

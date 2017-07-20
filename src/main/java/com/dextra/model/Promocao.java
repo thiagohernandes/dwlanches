@@ -9,17 +9,17 @@ public class Promocao {
 	
 	private int id;
 	private String descricao;
-	private Lanche lanche;
+	private int desconto;
 
-	public Promocao(int id , String descricao){
+	public Promocao(int id , String descricao, int desconto){
 		this.id = id;
 		this.descricao = descricao;
+		this.desconto = desconto;
 	}
 	
 	public Promocao(int id , String descricao, Lanche lanche){
 		this.id = id;
 		this.descricao = descricao;
-		this.lanche = lanche;
 	}
 	
 	public int getId() {
@@ -34,10 +34,12 @@ public class Promocao {
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
-	public Lanche getLanche() {
-		return lanche;
+
+	public int getDesconto() {
+		return desconto;
 	}
-	public void setLanche(Lanche lanche) {
-		this.lanche = lanche;
+
+	public void setDesconto(int desconto) {
+		this.desconto = desconto;
 	}
 }

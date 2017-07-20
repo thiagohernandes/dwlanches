@@ -13,6 +13,7 @@ public class Lanche {
 	private String nome;
 	private List<Ingrediente> ingredientes;
 	private double valorTotal;
+	private int qtd;
 	
 	public Lanche(){
 		
@@ -55,6 +56,11 @@ public class Lanche {
 	public void setValorTotal(double valorTotal) {
 		this.valorTotal = valorTotal;
 	}
-	
+	public int getQtd() {
+		return qtd;
+	}
+	public void setQtd(int qtd) {
+		this.qtd = qtd;
+	}
 
 }

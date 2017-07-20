@@ -266,8 +266,8 @@
                 listaIngredientes : [],
                 listaLanchesSelecionados : [],
                 listaIngredientesSelecionados : [],
-                erros : [],
-                resultadoValorLanche : 0
+                listaPromocoes : [],
+                erros : []
         };
         
         function validar(pedido, resultado) {
@@ -276,6 +276,7 @@
             if(utilService.isNullOrUndefined(pedido.cliente)
             		|| utilService.isNullOrUndefined(pedido.datapedido)
             		|| pedido.listaLanchesSelecionados.length < 1
+            		|| utilService.isNullOrUndefined(pedido.qtd)
             		){
             	edicaoPedidoService.erros.push(mensagens.gravacao_nao_permitida);            	
             }
@@ -306,7 +307,9 @@
         	}
         	
         	for(var i = 0; i < pedido.listaLanchesSelecionados.length; i++){
-        		dados.lanches.push(pedido.listaLanchesSelecionados[i].id); 
+        		dados.lanches.push(pedido.listaLanchesSelecionados[i].id+"-"+
+        						   pedido.listaLanchesSelecionados[i].valorTotal+"-"+
+        						   pedido.listaLanchesSelecionados[i].qtd); 
         	}
         	/*
         	dados.ingredientes = [];
@@ -378,6 +381,15 @@
                     window.alert(mensagens.erro_carregar_lanches);               
             });            
         }; 
+        
+        edicaoPedidoService.carregarComboPromocoes = function() {                  		
+            $http.get('/dw-lanches/rest/promocoes/todas').then(function (response) {            	
+            	edicaoPedidoService.listaPromocoes = response.data;            	
+            }, function (response) {            	
+                    window.console.log(response);
+                    window.alert(mensagens.erro_carregar_promocoes);               
+            });            
+        }; 
 
         return edicaoPedidoService;
     }]);
@@ -420,6 +432,7 @@
     	$scope.carregarCombos = function(){
             $scope.edicaoPedidoService.carregarComboClientes();
             $scope.edicaoPedidoService.carregarComboLanches();
+            $scope.edicaoPedidoService.carregarComboPromocoes();
     	};
     	
     	 $scope.inicializarAtributos = function(){
@@ -429,7 +442,8 @@
                  	 lanche : {},
                      vltotal : 0.00,
                      listaLanchesSelecionados : [],
-                     listaIngredientesSelecionados : []
+                     listaIngredientesSelecionados : [],
+                     qtd : null
                  };
          };
 
@@ -450,7 +464,7 @@
 	         }               	
              $scope.pedido.cliente = $scope.edicaoPedidoService.listaClientes[indexCliente];      
              
-             for(var z = 0; z < pedido.lanches.length; z++){
+             for(var z = 0; z < pedido.lanches.length; z++){ 
             	 $scope.pedido.listaLanchesSelecionados.push(pedido.lanches[z]);
              }
              
@@ -465,24 +479,64 @@
             $scope.salvoComSucesso = false;
             $scope.alterando = false;
             $scope.carregarCombos();
-        }
+        };
+        
+        function verificarLancheInserido(id){ debugger
+        	var retorno = true;
+        	for(var x = 0; x < $scope.pedido.listaLanchesSelecionados.length;x++){
+        		if($scope.pedido.listaLanchesSelecionados[x].id == id){
+        			retorno = false;
+        			break;
+        		}
+        	}
+        	return retorno;
+        };
     	
-    	$scope.adicionarLanche = function(idLanche){ 
+    	$scope.adicionarLanche = function(idLanche){ debugger
+    		if(!utilService.isNullOrUndefined(idLanche) &&
+    				!utilService.isNullOrUndefined($scope.pedido.qtd)) {
+    		if(verificarLancheInserido(idLanche) == true){	
     		$http.get('/dw-lanches/rest/pedidos/lanche/'+idLanche).then(
-                    function (response) { 
-                       $scope.pedido.listaLanchesSelecionados.push(response.data);
-                       $scope.pedido.vltotal+=response.data.valorTotal; 
+                    function (response) {
+                      $scope.edicaoPedidoService.erros = [];
+                       var lanche = {}; 
+                       lanche = response.data;
+                       lanche.qtd = $scope.pedido.qtd;
+                       // com promoção
+                       if(!utilService.isNullOrUndefined($scope.pedido.promocao)){
+                    	   $scope.pedido.vltotal+= 
+           	   				(response.data.valorTotal -
+           		   			((response.data.valorTotal*$scope.pedido.promocao.desconto)/100))*$scope.pedido.qtd;
+                    	   lanche.valorTotal = (response.data.valorTotal -
+                  		   			((response.data.valorTotal*$scope.pedido.promocao.desconto)/100));                    	   
+                    	   $scope.pedido.listaLanchesSelecionados.push(lanche);
+                       } else { 
+                    	   // sem promoção
+                    	   lanche.valorTotal = lanche.valorTotal;
+                    	   $scope.pedido.listaLanchesSelecionados.push(lanche);
+                    	   $scope.pedido.vltotal+=response.data.valorTotal*$scope.pedido.qtd; 
+                       }
                     },
                     function (response) {
                             window.console.log(response);
                             window.alert(mensagens.erro_ao_consultar_valor_lanche);
                     }
                 ); 
+    		} else {
+    			$scope.edicaoPedidoService.erros.push(mensagens.lanche_ja_adicionado);
+    		}
+    		} else {
+    			$scope.edicaoPedidoService.erros.push(mensagens.aviso_adicionar_lanche); 
+    		}
     	};
     	
-    	$scope.removerLanche = function(index,valor){ debugger
+    	$scope.limparLanche = function(){
+    		$scope.pedido.lanche = {};
+    	};
+    	
+    	$scope.removerLanche = function(index,valor,qtd){ 
     		$scope.pedido.listaLanchesSelecionados.splice(index,1);
-            $scope.pedido.vltotal-=valor;
+            $scope.pedido.vltotal-=valor*qtd;
             $scope.pedido.vltotal.toFixed(2);
     	};
 

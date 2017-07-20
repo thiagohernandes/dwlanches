@@ -53,11 +53,6 @@
                 </fieldset> 
         </div>
         <div class="row">
-                <fieldset class="form-group col-md-6">
-                   <label>* CAMPOS OBRIGATÓRIOS</label>
-                </fieldset>
-        </div>                 
-        <div class="row">
             <div class="col-md-6">
                 <button class="btn btn-primary" type="button" 
                 ng-click="salvar()">Salvar</button>
@@ -65,10 +60,20 @@
                 ng-click="cancelar()">Cancelar/Voltar</button>
             </div>
         </div>
-        
+        <br/>
         <div class="row">
-        	<fieldset class="form-group col-md-3">
-                    <label for="filtro-cliente">Lanche:</label>
+            <fieldset class="form-group col-md-3">
+                    <label for="edicao-promocao">Promoção:</label>
+                    <p class="input-group input-group-sm">
+                     <select style="width : 250px" ng-model="pedido.promocao"
+                      class="form-control" ng-change="limparLanche()"
+ 				      ng-options="item.descricao for item in edicaoPedidoService.listaPromocoes">
+ 				    	<option value="">Promoções</option>
+					</select>
+					</p>
+            </fieldset>
+            <fieldset class="form-group col-md-3">
+                    <label for="edicao-lanche">* Lanche:</label>
                     <p class="input-group input-group-sm">
                      <select style="width : 250px" ng-model="pedido.lanche"
                       class="form-control"
@@ -76,8 +81,27 @@
  				    	<option value="">Selecione um lanche</option>
 					</select>
 					</p>
+            </fieldset>  
+             <fieldset class="form-group col-md-2">
+                   <label for="numero-pedido">* Qtd:</label>
+                   <p class="input-group input-group-sm">
+	                <input id="numero-pedido" type="number" class="form-control"
+	                		ng-model="pedido.qtd"/>	               
+            		</p>
+                </fieldset>   
+        </div> 
+        <div class="row">
+                <fieldset class="form-group col-md-6">
+                   <label>* CAMPOS OBRIGATÓRIOS</label>
                 </fieldset>
         </div> 
+         
+         <div class="row">
+	         <fieldset class="form-group col-md-6">
+	         <h4>Valor total -> R$ {{pedido.vltotal | number : 2}}</h4>
+	         </fieldset>
+         </div>
+         
         <div class="row">        
             <fieldset class="form-group col-md-2">
                 <button class="btn btn-info" type="button" 
@@ -91,7 +115,8 @@
             <thead>
                 <tr class="borda-esquerda-tabela borda-direita-tabela">
                     <th class="text-center">Lanche</th>
-                    <th class="text-center borda-direita-tabela">Valor</th>                 
+                    <th class="text-center borda-direita-tabela">Qtd.</th>
+                    <th class="text-center borda-direita-tabela">Valor Total</th>                 
                     <th class="text-center borda-direita-tabela">Ações</th>           
                 </tr>
             </thead>
@@ -100,10 +125,11 @@
                 <tr class="text-center borda-inferior-tabela borda-esquerda-tabela borda-direita-tabela"
                  ng-class="{success: $first}">
                     <td align="left">{{item.nome}}</td>
+                    <td align="center">{{item.qtd}}</td>
                     <td align="right">R$ {{item.valorTotal}}</td>
                     <td>
                      <a id="btn-excluir" class="btn btn-danger" type="button"
-                     ng-click="removerLanche($index,item.valorTotal)">                     
+                     ng-click="removerLanche($index,item.valorTotal,item.qtd)">                     
                         <i class="glyphicon glyphicon-remove"></i></a>
                     </td>                
                 </tr>
@@ -111,11 +137,6 @@
         	</table>
           </fieldset>
         </div>
-        <div class="row">
-         <fieldset class="form-group col-md-6">
-         <h4>Valor total -> R$ {{pedido.vltotal | number : 2}}</h4>
-         </fieldset>
-         </div>
         
         <div class="row">
 	    	<hr/>
