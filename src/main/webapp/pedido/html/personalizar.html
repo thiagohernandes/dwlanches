@@ -1,0 +1,86 @@
+<div class="container">
+    <h3>Personalizar Lanche</h3>
+
+    <div class="row">
+	    <hr/>
+	</div>
+    
+    <form id="form-atendimento">
+        <div class="row" ng-if="personalizarService.erros && personalizarService.erros.length !== 0">
+            <div class="col-md-12">
+                <div class="alert alert-danger">
+                    <strong>{{ mensagens.informacao_pesquisa }}</strong>
+                    <ul>
+                        <li ng-repeat="mensagem in personalizarService.erros">{{ mensagem }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+           
+        <div class="row" ng-if="salvoComSucesso">
+            <div class="col-md-12">
+                <div class="alert alert-success">
+                    {{ mensagens.personalizado_com_sucesso }}
+                </div>
+            </div>
+        </div>
+   
+        <div class="row">
+        	<fieldset class="form-group col-md-2">
+                   <label for="nome-lanche">Nome do lanche:</label>
+                   <p class="input-group input-group-sm">
+	                <input id="nome-lanche" type="text" class="form-control"
+	                		ng-model="personalizado.nome"/>	               
+            		</p>
+            </fieldset>
+            <fieldset class="form-group col-md-3">
+                    <label for="edicao-ingrediente">Ingrediente:</label>
+                    <p class="input-group input-group-sm">
+                     <select style="width : 250px" ng-model="personalizado.ingrediente"
+                      class="form-control" 
+ 				      ng-options="item.nome for item in personalizarService.listaIngredientes">
+ 				    	<option value="">Selecione o ingrediente</option>
+					</select>
+					</p>
+            </fieldset>
+        </div> 
+         
+         <div class="row">
+	         <fieldset class="form-group col-md-6">
+	         <h4>Valor total -> R$ {{personalizado.vltotal | number : 2}}</h4>
+	         </fieldset>
+         </div>
+         
+        <div class="row">        
+            <fieldset class="form-group col-md-2">
+                <button class="btn btn-info" type="button" 
+                ng-click="adicionarIngrediente(personalizado.ingrediente.id)">Adicionar Ingrediente</button>
+            </fieldset>
+        </div>
+        
+         <div class="row">
+         <fieldset class="form-group col-md-6">
+            <table class="table table-condensed" ng-if="personalizado.listaIngredientesSelecionados.length > 0">
+            <thead>
+                <tr class="borda-esquerda-tabela borda-direita-tabela">
+                    <th class="text-center">Nome</th>
+                    <th class="text-center borda-direita-tabela">Valor</th>
+                </tr>
+            </thead>
+            <tbody ng-repeat="item in personalizado.listaIngredientesSelecionados">
+                <tr class="text-center borda-inferior-tabela borda-esquerda-tabela borda-direita-tabela"
+                 ng-class="{success: $first}">
+                    <td align="left">{{item.nome}}</td>
+                    <td align="center">R$ {{item.valor | number : 2}}</td>
+                </tr>
+            </tbody>
+        	</table>
+          </fieldset>
+        </div>
+        
+        <div class="row">
+	    	<hr/>
+		</div>
+    </form>
+    
+</div>

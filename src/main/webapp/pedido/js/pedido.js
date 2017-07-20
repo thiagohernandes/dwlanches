@@ -33,6 +33,9 @@
         }).when('/consultar', {
             templateUrl: '/dw-lanches/pedido/html/consultar.html',
             controller: 'PesquisarPedidoCtrl'
+        }).when('/personalizar', {
+            templateUrl: '/dw-lanches/pedido/html/personalizar.html',
+            controller: 'PersonalizarLancheCtrl'
         }).otherwise({
             redirectTo: '/consultar'
         });
@@ -263,9 +266,7 @@
         var edicaoPedidoService = {
                 listaClientes : [],
                 listaLanches : [],
-                listaIngredientes : [],
                 listaLanchesSelecionados : [],
-                listaIngredientesSelecionados : [],
                 listaPromocoes : [],
                 erros : []
         };
@@ -311,11 +312,7 @@
         						   pedido.listaLanchesSelecionados[i].valorTotal+"-"+
         						   pedido.listaLanchesSelecionados[i].qtd); 
         	}
-        	/*
-        	dados.ingredientes = [];
-        	for(var i = 0; i < pedido.listaIngredientesSelecionados.length; i++){
-        		dados.ingredientes.id.push(pedido.listaIngredientesSelecionados.id); 
-        	} */
+        
             return dados;
         }
 
@@ -442,7 +439,6 @@
                  	 lanche : {},
                      vltotal : 0.00,
                      listaLanchesSelecionados : [],
-                     listaIngredientesSelecionados : [],
                      qtd : null
                  };
          };
@@ -481,7 +477,7 @@
             $scope.carregarCombos();
         };
         
-        function verificarLancheInserido(id){ debugger
+        function verificarLancheInserido(id){ 
         	var retorno = true;
         	for(var x = 0; x < $scope.pedido.listaLanchesSelecionados.length;x++){
         		if($scope.pedido.listaLanchesSelecionados[x].id == id){
@@ -492,7 +488,7 @@
         	return retorno;
         };
     	
-    	$scope.adicionarLanche = function(idLanche){ debugger
+    	$scope.adicionarLanche = function(idLanche){ 
     		if(!utilService.isNullOrUndefined(idLanche) &&
     				!utilService.isNullOrUndefined($scope.pedido.qtd)) {
     		if(verificarLancheInserido(idLanche) == true){	
@@ -608,5 +604,180 @@
     	  };
     
 	}]);
+    
+    /**PersonalizadoService
+     * factory/serviço de criação básica de um lanche com os respectivos ingredientes
+     * */ 
+    pedido.factory('PersonalizadoService', ['$http', 
+    											'$q', 
+    											'MensagensPedidoService', 
+    											'ConversorDataService',
+  											  	'UtilService',
+    											function ($http, 
+    													  $q, 
+    													  mensagens,
+    													  conversorData,
+    	    											  utilService) {
+        var personalizadoService = {
+                listaIngredientes : [],
+                listaIngredientesSelecionados : [],
+                erros : []
+        };
+        
+        function validar(personalizado, resultado) {
+        	personalizadoService.erros = [];        	
+            if(utilService.isNullOrUndefined(personalizado.nome)
+            		|| personalizado.listaIngredientessSelecionados.length < 1
+            		){
+            	personalizadoService.erros.push(mensagens.criacao_lanche_nao_permitida);            	
+            }
+            if (edicaoPedidoService.erros.length !== 0) {
+                resultado.reject(personalizadoService.erros);
+                return false;
+            }
+            return true;
+        }
+        
+        function montarDados(personalizado) {  
+        	var dados = {
+        			nome : {},
+        			ingredientes : []
+        	};
+        	dados.nome = personalizado.nome;
+        	for(var i = 0; i < personalizado.listaIngredientesSelecionados.length; i++){
+        		dados.ingredientes.push(pedido.listaIngredientesSelecionados[i].id); 
+        	}
+            return dados;
+        }
+
+        function criar(personalizado, resultado) {        	
+            $http.post('/dw-lanches/rest/lanches/novo', montarDados(personalizado)).then(function (response) {
+                resultado.resolve(response.data);
+            }, function (response) {
+            	window.console.log(response);
+                window.alert(mensagens.erro_ao_criar_lanche);
+                resultado.reject(response.data);
+            });
+        };
+
+        personalizadoService.salvar = function (personalizado) { 
+            var resultado = $q.defer();
+            if (validar(personalizado, resultado)) {
+                criar(personalizado, resultado);
+            }
+            return resultado.promise;
+        };
+        
+        personalizadoService.carregarComboIngredientes = function() {                  		
+            $http.get('/dw-lanches/rest/ingredientes/todos').then(function (response) {            	
+            	edicaoPedidoService.listaClientes = response.data;            	
+            }, function (response) {
+            	window.console.log(response);
+                window.alert(mensagens.erro_carregar_clientes);
+            });            
+        };  
+
+        return personalizadoService;
+    }]);
+
+    /**PersonalizarLancheCtrl
+     * Controller de criação do lanche personalizado que receberá a injeção de servicos
+     * */ 
+    pedido.controller('PersonalizarLancheCtrl', 
+    											['$scope',
+    											'$routeParams', 
+    											'$timeout', 
+    											'PersonalizadoService', 
+    											'MensagensPedidoService',    											
+    											'UtilService',
+    											'$http',
+    											'ConversorDataService',
+                                                 function ($scope,
+                                                		   $routeParams, 
+                                                		   $timeout, 
+                                                		   personalizadoService, 
+                                                		   mensagens,
+                                                		   utilService,
+                                                		   $http,
+                                                		   conversorData) {
+    												
+    	$scope.mensagens = mensagens;
+    	$scope.personalizadoService = personalizadoService;
+    	
+    	$scope.carregarCombo = function(){
+            $scope.personalizadoService.carregarComboIngredientes();
+    	};
+    	
+    	$scope.inicializarAtributos = function(){
+         	$scope.personalizado = {
+                     vltotal : 0.00,
+                     listaIngredientesSelecionados : [],
+                     nome : null
+                 };
+         };
+        
+        $scope.inicializarAtributos();
+        $scope.personalizadoService.erros = [];
+        $scope.salvoComSucesso = false;
+        $scope.carregarCombo();
+        
+        function verificarIngredienteInserido(id){ 
+        	var retorno = true;
+        	for(var x = 0; x < $scope.personalizado.listaIngredientesSelecionados.length;x++){
+        		if($scope.personalizado.listaIngredientesSelecionados[x].id == id){
+        			retorno = false;
+        			break;
+        		}
+        	}
+        	return retorno;
+        };
+    	
+    	$scope.adicionarIngrediente = function(id){ 
+    		if(!utilService.isNullOrUndefined(id) ||
+    				!utilService.isNullOrUndefined($scope.personalizado.nome)) {
+	    		if(verificarIngredienteInserido(id) == true){	
+	    		$http.get('/dw-lanches/rest/ingredientes/carregar/'+id).then(
+	                    function (response) {
+	                      $scope.personalizadoService.erros = [];
+	                       var ingrediente = {}; 
+	                       ingrediente = response.data;
+	                       $scope.personalizado.vltotal+=ingrediente.valor;
+	                       $scope.personalizado.listaIngredientesSelecionados.push(ingrediente);
+	                    },
+	                    function (response) {
+	                            window.console.log(response);
+	                            window.alert(mensagens.erro_ao_retornar_ingrediente);
+	                    }
+	                ); 
+	    		} else {
+	    			$scope.personalizadoService.erros.push(mensagens.ingrediente_ja_adicionado);
+	    		}
+    		} else {
+    			$scope.personalizadoService.erros.push(mensagens.criacao_lanche_nao_permitida); 
+    		}
+    	};
+
+        $scope.salvar = function () { 
+        	personalizadoService.salvar($scope.personalizado).then(function (resultado) {                
+                $scope.personalizadoService.erros = [];
+                $scope.salvoComSucesso = true;
+                setTimeout(function(){ 
+                	window.location.href = "#/consultar";
+                	}, 2000);
+            }, function (erros) {
+            	window.console.log(erros);
+                $scope.salvoComSucesso = false;
+            });
+        };
+        
+        $scope.cancelar = function(){
+        	$scope.inicializarAtributos();        	
+            $scope.personalizadoService.erros = [],
+            $scope.salvoComSucesso = false; 
+            window.location.href = "#/consultar";
+        };
+        
+    }]);
+
     
 }());

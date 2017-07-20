@@ -18,6 +18,10 @@
    "erro_ao_consultar_valor_lanche" : "Erro ao consultar o valor do lanche!",
    "erro_ao_adicionar_lanche" : "Erro ao adicionar lanche!",
    "aviso_adicionar_lanche" : "Escolha o lanche e a respectiva quantidade!",
-   "lanche_ja_adicionado" : "Lanche já adicionado!"
+   "lanche_ja_adicionado" : "Lanche já adicionado!",
+   "criacao_lanche_nao_permitida" : "Para personalizar, forneça o nome e ao menos um ingrediente!",
+   "erro_ao_criar_lanche" : "Erro ao criar lanche personalizado!",
+   "erro_ao_retornar_ingrediente" : "Erro ao retornar ingrediente!",
+   "personalizado_com_sucesso" : "Personalização de lanche efetuada com sucesso! Redirecionando...",
    
  }

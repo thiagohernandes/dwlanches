@@ -6,7 +6,7 @@
 	    <hr/>
 	</div>
     
-    <form id="form-atendimento">
+    <form id="form-pedido">
         <div class="row" ng-if="edicaoPedidoService.erros && edicaoPedidoService.erros.length !== 0">
             <div class="col-md-12">
                 <div class="alert alert-danger">
@@ -126,7 +126,7 @@
                  ng-class="{success: $first}">
                     <td align="left">{{item.nome}}</td>
                     <td align="center">{{item.qtd}}</td>
-                    <td align="right">R$ {{item.valorTotal}}</td>
+                    <td align="right">R$ {{item.valorTotal | number : 2}}</td>
                     <td>
                      <a id="btn-excluir" class="btn btn-danger" type="button"
                      ng-click="removerLanche($index,item.valorTotal,item.qtd)">                     

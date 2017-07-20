@@ -1,12 +1,10 @@
 package com.dextra.dao;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import com.dextra.model.Cliente;
-import com.dextra.model.Ingrediente;
 import com.dextra.model.Lanche;
 import com.dextra.model.Pedido;
 import com.dextra.util.Util;
@@ -40,9 +38,6 @@ public class DaoPedido {
 	 * @param dados do pedido e flag (1 = inserção e 2 = alteração)
 	 * */
 	public void gravar(Map<String,Object> pedido, int flag){
-		// caso de lanche personalizado
-		List<Ingrediente> ingredientesPersonalizados = new ArrayList<>();
-		
 		// cliente
 		Object  objCliente = pedido.get("cliente");	
 		String[] valoresCliente = util.formataValoresObjeto(objCliente);
@@ -57,25 +52,10 @@ public class DaoPedido {
 			String[] vLancheCodigoValor = vLanche[0].split("-");
 			
 			int auxCodigoLanche = Integer.parseInt(vLancheCodigoValor[0]);			
-			if(auxCodigoLanche < 5) {
-				Lanche lancheAux = daoLanche.lancheId(auxCodigoLanche);
-				lancheAux.setValorTotal(Double.parseDouble(vLancheCodigoValor[1].toString()));
-				lancheAux.setQtd(Integer.parseInt(vLancheCodigoValor[2].toString()));
-				lanchesPedido.add(lancheAux);
-			} else {
-				// ingredientes personalizados 
-					List<Object> objIngrPersonalizado = Arrays.asList(vLanche);
-					for(int w = 1; w < objIngrPersonalizado.size(); w++) {			
-						Object oIngrPersonalizado = objIngrPersonalizado.get(w);		
-						String[] vIngrPersonalizado = util.formataValoresObjeto(oIngrPersonalizado);
-						Ingrediente ingrediente = daoLanche.ingredienteId(Integer.parseInt(vIngrPersonalizado[0]));
-						ingredientesPersonalizados.add(ingrediente);
-					}
-					Lanche lancheAux = daoLanche.lancheId(auxCodigoLanche,ingredientesPersonalizados);
-					lancheAux.setValorTotal(Double.parseDouble(vLancheCodigoValor.toString()));
-					lancheAux.setQtd(Integer.parseInt(vLancheCodigoValor[2].toString()));
-					lanchesPedido.add(lancheAux);	
-			}
+			Lanche lancheAux = daoLanche.lancheId(auxCodigoLanche);
+			lancheAux.setValorTotal(Double.parseDouble(vLancheCodigoValor[1].toString()));
+			lancheAux.setQtd(Integer.parseInt(vLancheCodigoValor[2].toString()));
+			lanchesPedido.add(lancheAux);
 		}
 		
 		// pedido

@@ -21,7 +21,6 @@ public class DaoLanche extends DaoIngrediente {
 		lanches.add(new Lanche(2,"X-Burger"));
 		lanches.add(new Lanche(3,"X-Egg"));
 		lanches.add(new Lanche(4,"X-Egg Bacon"));
-		lanches.add(new Lanche(5,"Lanche Personalizado"));
 	}
 	
 	/**
@@ -49,21 +48,21 @@ public class DaoLanche extends DaoIngrediente {
 		}
 		// ingredientes
 		switch(id){
-			case 1: // X-Bacon
+			case 1: // X-Bacon R$ 6.5
 				ingredientesLanche.add(ingredienteId(2));
 				ingredientesLanche.add(ingredienteId(3));
 				ingredientesLanche.add(ingredienteId(5));
 				break;
-			case 2: // X-Burger
+			case 2: // X-Burger R$ 4.5
 				ingredientesLanche.add(ingredienteId(3));
 				ingredientesLanche.add(ingredienteId(5));
 				break;
-			case 3: // X-Egg
+			case 3: // X-Egg R$ 5.3
 				ingredientesLanche.add(ingredienteId(3));
 				ingredientesLanche.add(ingredienteId(4));
 				ingredientesLanche.add(ingredienteId(5));
 				break;
-			case 4: // X-Egg Bacon
+			case 4: // X-Egg Bacon R$ 7.3
 				ingredientesLanche.add(ingredienteId(2));
 				ingredientesLanche.add(ingredienteId(3));
 				ingredientesLanche.add(ingredienteId(4));
